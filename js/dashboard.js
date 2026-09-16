@@ -128,6 +128,7 @@ async function initDashboard() {
 
   setupRoleSwitcher();
   setupSidebarNavigation();
+  setupMobileSidebarDrawer();
   setupLogout();
   setupAllModalDismissals();
   setupAddStudentForm();
@@ -344,6 +345,40 @@ function setupSidebarNavigation() {
       renderDashboardUI();
     });
   });
+}
+
+function setupMobileSidebarDrawer() {
+  const toggleBtn = document.getElementById("dashboard-sidebar-toggle-btn");
+  const sidebar = document.getElementById("dashboard-sidebar");
+  const backdrop = document.getElementById("dashboard-sidebar-backdrop");
+  const closeBtn = document.getElementById("sidebar-mobile-close");
+
+  function openSidebar() {
+    if (sidebar) sidebar.classList.add("open");
+    if (backdrop) backdrop.classList.add("active");
+    document.body.classList.add("sidebar-drawer-open");
+  }
+
+  function closeSidebar() {
+    if (sidebar) sidebar.classList.remove("open");
+    if (backdrop) backdrop.classList.remove("active");
+    document.body.classList.remove("sidebar-drawer-open");
+  }
+
+  if (toggleBtn) toggleBtn.addEventListener("click", openSidebar);
+  if (backdrop) backdrop.addEventListener("click", closeSidebar);
+  if (closeBtn) closeBtn.addEventListener("click", closeSidebar);
+
+  // Close sidebar drawer when any tab link is tapped on mobile
+  if (sidebar) {
+    sidebar.querySelectorAll(".sidebar-link").forEach(link => {
+      link.addEventListener("click", () => {
+        if (window.innerWidth <= 992) {
+          closeSidebar();
+        }
+      });
+    });
+  }
 }
 
 function setupLogout() {

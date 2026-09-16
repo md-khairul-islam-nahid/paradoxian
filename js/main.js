@@ -101,6 +101,11 @@ function initNavbar() {
       navMenu.classList.toggle("active");
       const expanded = hamburger.classList.contains("active");
       hamburger.setAttribute("aria-expanded", expanded);
+      if (expanded) {
+        document.body.classList.add("nav-menu-open");
+      } else {
+        document.body.classList.remove("nav-menu-open");
+      }
     });
 
     // Close menu when clicking outside or on a link
@@ -108,6 +113,7 @@ function initNavbar() {
       if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
         hamburger.classList.remove("active");
         navMenu.classList.remove("active");
+        document.body.classList.remove("nav-menu-open");
       }
     });
 
@@ -115,6 +121,7 @@ function initNavbar() {
       link.addEventListener("click", () => {
         hamburger.classList.remove("active");
         navMenu.classList.remove("active");
+        document.body.classList.remove("nav-menu-open");
       });
     });
   }
