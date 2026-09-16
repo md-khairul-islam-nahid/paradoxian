@@ -1249,6 +1249,15 @@ class BatchApiService {
     sessionStorage.clear();
   }
 
+  getApiBaseUrl() {
+    if (typeof window !== "undefined" && window.location && window.location.origin) {
+      if (window.location.origin.startsWith("http") && !window.location.origin.includes(":5500") && !window.location.origin.includes(":3000")) {
+        return "";
+      }
+    }
+    return "http://localhost:5000";
+  }
+
   /* ------------------------------------------------------------------------
      ADMIN & ROLE DELEGATION API
      Super Admin: iam.nahidkhan.bd@gmail.com
@@ -1256,7 +1265,7 @@ class BatchApiService {
   async getAdminsList() {
     await this.delay(50);
     try {
-      const res = await fetch("http://localhost:5000/api/admin/list");
+      const res = await fetch(`${this.getApiBaseUrl()}/api/admin/list`);
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.admins)) {
@@ -1304,7 +1313,7 @@ class BatchApiService {
   async getAdminRequests() {
     await this.delay(50);
     try {
-      const res = await fetch("http://localhost:5000/api/admin/list");
+      const res = await fetch(`${this.getApiBaseUrl()}/api/admin/list`);
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.requests)) {
@@ -1344,7 +1353,7 @@ class BatchApiService {
 
     // Try backend persistence
     try {
-      fetch("http://localhost:5000/api/admin/student-role", {
+      fetch(`${this.getApiBaseUrl()}/api/admin/student-role`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: student.id, roll: student.roll, email: student.email, newRole: cleanRole })
@@ -1391,7 +1400,7 @@ class BatchApiService {
 
     // Try backend
     try {
-      const res = await fetch("http://localhost:5000/api/admin/nominate", {
+      const res = await fetch(`${this.getApiBaseUrl()}/api/admin/nominate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newReq)
@@ -1419,7 +1428,7 @@ class BatchApiService {
 
     // Try backend
     try {
-      const res = await fetch("http://localhost:5000/api/admin/approve-nomination", {
+      const res = await fetch(`${this.getApiBaseUrl()}/api/admin/approve-nomination`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ requestId, approverEmail: cleanApprover })
@@ -1482,7 +1491,7 @@ class BatchApiService {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/reject-nomination", {
+      const res = await fetch(`${this.getApiBaseUrl()}/api/admin/reject-nomination`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ requestId, approverEmail: cleanApprover, reason })

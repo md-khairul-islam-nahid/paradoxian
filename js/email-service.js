@@ -65,7 +65,10 @@
         let timeoutId = null;
         try {
           const controller = new AbortController();
-          timeoutId = setTimeout(() => controller.abort(), 12000); // 12-second timeout per endpoint
+          // Allow up to 50s on live endpoints for Render cloud cold-start spin up
+          const isLocal = endpoint.includes("localhost") || endpoint.includes("127.0.0.1");
+          const timeoutMs = isLocal ? 10000 : 50000;
+          timeoutId = setTimeout(() => controller.abort(), timeoutMs);
           const res = await fetch(endpoint, {
             ...options,
             signal: controller.signal,
