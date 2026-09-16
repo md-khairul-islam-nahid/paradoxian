@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notice Board | Paradox-147 (Physics, Rajshahi College)</title>
+  <meta name="description" content="Official notice board for Paradox-147 — The 147th Honours Batch (2024-25 Session), Department of Physics, Rajshahi College, Rajshahi.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/batch-logo.png">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .notice-filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      background: var(--white);
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .notice-category-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .notice-category-pill {
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: var(--slate-100);
+      color: var(--slate-600);
+      border: 1px solid var(--slate-200);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .notice-category-pill:hover {
+      border-color: var(--gold-500);
+      color: var(--navy-900);
+    }
+    .notice-category-pill.active {
+      background: var(--navy-900);
+      color: var(--gold-400);
+      border-color: var(--navy-900);
+    }
+    .urgent-border {
+      border-left: 4px solid var(--maroon-700) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       GLOBAL NAVBAR
+       ======================================================================== -->
+  <header class="navbar" id="main-navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="assets/images/batch-logo.png" alt="PARADOX-147 Crest" class="brand-crest-img">
+        <div class="brand-info">
+          <span class="brand-name">PARADOX-147</span>
+          <span class="brand-sub">Dept. of Physics • Rajshahi College</span>
+        </div>
+      </a>
+
+      <nav class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="students.html" class="nav-link">Students</a>
+        <a href="gallery.html" class="nav-link">Gallery</a>
+        <a href="notices.html" class="nav-link active">Notices</a>
+        <a href="index.html#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div id="nav-auth-container">
+          <a href="login.html" class="btn btn-sm btn-outline-gold">Portal Login</a>
+        </div>
+        <button class="hamburger-btn" aria-label="Toggle navigation menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================
+         NOTICE BOARD HERO BANNER
+         ======================================================================== -->
+    <section class="section-sm section-bg-navy" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+      <div class="container">
+        <div class="official-header-banner" style="margin-bottom: 0;">
+          <img src="assets/images/rc-logo.png" alt="Rajshahi College" class="official-banner-logo" title="Rajshahi College (Est. 1873)">
+          <div class="official-banner-center">
+            <div class="official-banner-title">Department of Physics • Rajshahi College, Rajshahi</div>
+            <div class="official-banner-batch">Paradox-147 — The 147th Honours Batch (Session 2024-25)</div>
+            <div class="official-banner-tagline">• We Live • We Laugh • We Conquer •</div>
+            <h1 id="notices-page-title" style="color: var(--white); font-size: clamp(1.4rem, 3vw, 1.85rem); margin: 0.5rem 0 0.25rem 0; font-weight: 800;">
+              Official Academic Circulars & Notices
+            </h1>
+            <p id="notices-page-subtitle" style="color: var(--slate-300); max-width: 680px; margin: 0 auto; font-size: 0.88rem;">
+              Stay informed with authenticated circulars, examination schedules, practical laboratory guidelines, and administrative notices from Rajshahi College.
+            </p>
+          </div>
+          <img src="assets/images/batch-logo.png" alt="Paradox-147" class="official-banner-logo" title="Paradox-147 Official Batch Crest">
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SEARCH & CATEGORY FILTERS
+         ======================================================================== -->
+    <section class="section" style="padding-top: 2.5rem;">
+      <div class="container">
+        <div class="notice-filter-bar">
+          <!-- Category Pills -->
+          <div class="notice-category-pills">
+            <button class="notice-category-pill active" data-category="All">All Categories</button>
+            <button class="notice-category-pill" data-category="Academic">Academic</button>
+            <button class="notice-category-pill" data-category="Exams">Exams & Routine</button>
+            <button class="notice-category-pill" data-category="Events">Events & Tours</button>
+            <button class="notice-category-pill" data-category="Administration">Administration</button>
+          </div>
+
+          <!-- Live Search Input -->
+          <div style="position: relative; min-width: 280px; flex: 1; max-width: 380px;">
+            <input type="text" id="notice-search-input" class="form-input" placeholder="Search notices by keyword..." style="padding-left: 2.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: var(--slate-400);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             DYNAMIC NOTICES LIST
+             ==================================================================== -->
+        <div id="notices-list-container">
+          <!-- Filled dynamically by notices.js -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       NOTICE DETAIL MODAL
+       ======================================================================== -->
+  <div class="modal-backdrop" id="notice-detail-modal">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 id="notice-modal-title" style="font-size: 1.25rem;">Notice Details</h3>
+        <button class="modal-close-btn" onclick="closeNoticeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="notice-modal-meta" style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; font-size: 0.85rem; color: var(--slate-600); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--slate-100);"></div>
+        <div id="notice-modal-body"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-sm btn-ghost" onclick="closeNoticeModal()">Close</button>
+        <button class="btn btn-sm btn-gold" id="notice-modal-download-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF Document
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       GLOBAL FOOTER
+       ======================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border: none; padding-top: 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.25rem;">
+        <div>© 2024–2025 Paradox-147, Department of Physics, Rajshahi College. • Official Email: <a href="mailto:mail.paradox147@gmail.com" style="color:var(--gold-400); font-weight:600;">mail.paradox147@gmail.com</a></div>
+        <div class="developer-credit">
+          <span>Developed by</span>
+          <a href="https://nahid.page.gd" target="_blank" rel="noopener noreferrer" class="developer-portfolio-link" title="Visit Portfolio of MD. KHAIRUL ISLAM NAHID (https://nahid.page.gd)">
+            <span>MD. KHAIRUL ISLAM NAHID</span>
+            <svg class="dev-link-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+        </div>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="index.html">Home</a>
+          <a href="students.html">Students</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/brand-assets.js"></script>
+  <script src="js/vendor/jspdf.umd.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/notices.js"></script>
+</body>
+</html>

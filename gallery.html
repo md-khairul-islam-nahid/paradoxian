@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery & Memories | Paradox-147 (Physics, Rajshahi College)</title>
+  <meta name="description" content="Visual memories and photo album of Paradox-147 — The 147th Honours Batch (2024-25 Session), Department of Physics, Rajshahi College. • We Live • We Laugh • We Conquer •">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/batch-logo.png">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .gallery-tabs-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+    .gallery-tab-btn {
+      padding: 0.6rem 1.25rem;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.88rem;
+      background: var(--white);
+      color: var(--slate-600);
+      border: 1px solid var(--slate-200);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .gallery-tab-btn:hover {
+      border-color: var(--gold-500);
+      color: var(--navy-900);
+    }
+    .gallery-tab-btn.active {
+      background: var(--navy-900);
+      color: var(--gold-400);
+      border-color: var(--navy-900);
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       GLOBAL NAVBAR
+       ======================================================================== -->
+  <header class="navbar" id="main-navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="assets/images/batch-logo.png" alt="PARADOX-147 Crest" class="brand-crest-img">
+        <div class="brand-info">
+          <span class="brand-name">PARADOX-147</span>
+          <span class="brand-sub">Dept. of Physics • Rajshahi College</span>
+        </div>
+      </a>
+
+      <nav class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="students.html" class="nav-link">Students</a>
+        <a href="gallery.html" class="nav-link active">Gallery</a>
+        <a href="notices.html" class="nav-link">Notices</a>
+        <a href="index.html#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div id="nav-auth-container">
+          <a href="login.html" class="btn btn-sm btn-outline-gold">Portal Login</a>
+        </div>
+        <button class="hamburger-btn" aria-label="Toggle navigation menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================
+         GALLERY HERO HEADER
+         ======================================================================== -->
+    <section class="section-sm section-bg-navy" style="padding-top: 3.5rem; padding-bottom: 3.5rem;">
+      <div class="container">
+        <div class="flex-between flex-wrap gap-2">
+          <div>
+            <span class="section-tag" style="background: rgba(212,175,55,0.15); margin-bottom: 0.5rem;">
+              Campus Album
+            </span>
+            <h1 id="gallery-page-title" style="color: var(--white); font-size: clamp(2rem, 4vw, 2.75rem); margin-bottom: 0.5rem;">
+              Memories & Milestones
+            </h1>
+            <p id="gallery-page-subtitle" style="color: var(--slate-300); max-width: 600px; margin: 0;">
+              Celebrating our collegiate journey of shared laughter, physics laboratory discoveries, college campus addas, 
+              and batch tours at Rajshahi College. <em>• We Live • We Laugh • We Conquer •</em>
+            </p>
+          </div>
+          <button class="btn btn-gold" id="gallery-contribute-btn" onclick="openAddMemoryModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            + Contribute a Memory
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         CATEGORY TABS & MASONRY GRID
+         ======================================================================== -->
+    <section class="section">
+      <div class="container">
+        <!-- Category Filter Tabs (Dynamic) -->
+        <div class="gallery-tabs-nav" id="gallery-tabs-nav">
+          <button class="gallery-tab-btn active" data-category="All">All Memories</button>
+          <!-- Dynamic category tabs rendered by js/gallery.js -->
+        </div>
+
+        <!-- Responsive Masonry Layout -->
+        <div class="gallery-grid" id="gallery-grid-container">
+          <!-- Filled dynamically by js/gallery.js -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       FULLSCREEN LIGHTBOX MODAL
+       ======================================================================== -->
+  <div class="lightbox" id="gallery-lightbox" role="dialog" aria-modal="true">
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightbox-close-btn" aria-label="Close Lightbox">&times;</button>
+      
+      <button class="lightbox-nav-btn lightbox-prev" id="lightbox-prev-btn" aria-label="Previous Image">❮</button>
+      
+      <img id="lightbox-img" class="lightbox-img" src="" alt="Expanded Memory">
+      
+      <button class="lightbox-nav-btn lightbox-next" id="lightbox-next-btn" aria-label="Next Image">❯</button>
+
+      <div class="lightbox-caption">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.25rem;">
+          <h4 id="lightbox-title" style="margin:0;">Memory Title</h4>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <span id="lightbox-photo-counter" class="badge badge-gold" style="display:none; font-size:0.75rem;">Photo 1 of 1</span>
+            <a id="lightbox-admin-edit-link" href="#" class="btn btn-xs btn-outline-gold" style="display:none; font-size:0.75rem; text-decoration:none;">✏️ Edit Memory</a>
+          </div>
+        </div>
+        <div id="lightbox-meta" style="font-size:0.85rem; color:var(--gold-400); margin-bottom:0.4rem;"></div>
+        <p id="lightbox-caption" style="color:var(--slate-200); font-size:0.95rem; max-width:700px; margin:0 auto;"></p>
+        
+        <!-- Multi-photo Thumbnail Strip inside Lightbox -->
+        <div id="lightbox-thumbs-container" style="display:none; justify-content:center; gap:0.4rem; margin-top:0.75rem; overflow-x:auto; padding:0.4rem 0;">
+        </div>
+
+        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--slate-400);">
+          Tip: Use Left / Right arrow keys to navigate, Esc to close
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       CONTRIBUTE A MEMORY MODAL FORM
+       ======================================================================== -->
+  <div class="modal-backdrop" id="add-memory-modal">
+    <div class="modal-box" style="max-width: 600px;">
+      
+      <!-- 1. Guest / Unauthenticated State -->
+      <div id="memory-guest-box" style="display: none; text-align: center; padding: 1.5rem 0.5rem;">
+        <div style="width: 64px; height: 64px; margin: 0 auto 1rem auto; border-radius: 50%; background: rgba(212,175,55,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--gold-600);">
+          🔒
+        </div>
+        <h3 style="color: var(--navy-900); margin-bottom: 0.5rem;">Student Authentication Required</h3>
+        <p style="color: var(--slate-600); font-size: 0.92rem; line-height: 1.5; margin-bottom: 1.5rem;">
+          Anyone can explore our public batch gallery, but <strong>only verified batch students</strong> logged into their student dashboard can contribute new memories and upload photographs.
+        </p>
+        <div style="background: var(--navy-50); border: 1px solid var(--navy-100); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1.5rem; text-align: left; font-size: 0.82rem; color: var(--navy-800);">
+          🛡️ <strong>Note:</strong> All submitted memories undergo administrator review prior to appearing publicly on the portal.
+        </div>
+        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+          <a href="login.html?redirect=gallery.html" class="btn btn-gold" style="font-weight: 700;">
+            Sign In to Student Portal →
+          </a>
+          <button type="button" class="btn btn-outline-navy" onclick="closeAddMemoryModal()">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Registered Student Upload Form -->
+      <div id="memory-student-box" style="display: none;">
+        <div class="modal-header">
+          <div>
+            <h3 style="margin: 0; color: var(--navy-900);">Contribute a Batch Memory</h3>
+            <p style="margin: 0.2rem 0 0 0; font-size: 0.82rem; color: var(--slate-500);">
+              Logged in as <span id="memory-logged-in-user" style="font-weight: 700; color: var(--navy-800);">Student</span>
+            </p>
+          </div>
+          <button class="modal-close-btn" onclick="closeAddMemoryModal()">&times;</button>
+        </div>
+
+        <div class="modal-body" style="max-height: 75vh; overflow-y: auto; padding-right: 0.5rem;">
+          <form id="add-memory-form">
+            <!-- Memory Heading -->
+            <div class="form-group">
+              <label class="form-label">Memory Heading / Title <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="memory-title" class="form-input" placeholder="e.g. Rainy Day Tea Adda at Transport Stand" required>
+            </div>
+
+            <div class="form-row">
+              <!-- Date -->
+              <div class="form-group">
+                <label class="form-label">Date of Memory <span style="color:var(--danger-500);">*</span></label>
+                <input type="date" id="memory-date" class="form-input" required>
+              </div>
+              <!-- Location -->
+              <div class="form-group">
+                <label class="form-label">Location <span style="color:var(--danger-500);">*</span></label>
+                <input type="text" id="memory-location" class="form-input" placeholder="e.g. Physics Department Lab / Paris Road" required>
+              </div>
+            </div>
+
+            <!-- Customizable Album Category -->
+            <div class="form-group">
+              <label class="form-label">Album Category</label>
+              <select id="memory-category" class="form-select" onchange="handleMemoryCategoryChange(this)">
+                <!-- Rendered dynamically by js/gallery.js -->
+              </select>
+            </div>
+
+            <!-- Custom Category Inline Input (Shown when '+ Custom Category' chosen) -->
+            <div class="form-group" id="memory-custom-category-group" style="display: none;">
+              <label class="form-label">Custom Category Name <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="memory-custom-category" class="form-input" placeholder="e.g. Saint Martin Tour, Physics Cricket Cup, Farewell...">
+            </div>
+
+            <!-- Multi-Image File Upload (Up to 50 Pictures) -->
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                <label class="form-label" style="margin:0;">
+                  Upload Photographs (Up to 50 images) <span style="color:var(--danger-500);">*</span>
+                </label>
+                <span id="memory-photo-count-badge" class="badge badge-gold" style="font-size:0.75rem;">
+                  0 / 50 selected
+                </span>
+              </div>
+
+              <div style="border: 2px dashed var(--slate-300); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; background: var(--navy-50); position: relative; cursor: pointer;" onclick="document.getElementById('memory-file-input').click()">
+                <input type="file" id="memory-file-input" multiple accept="image/png, image/jpeg, image/jpg, image/webp" style="display: none;">
+                <div id="memory-upload-prompt">
+                  <div style="font-size: 2rem; margin-bottom: 0.35rem;">📸</div>
+                  <div style="font-weight: 600; color: var(--navy-900); font-size: 0.95rem;">Click to choose photos (Up to 50 pictures)</div>
+                  <div style="font-size: 0.78rem; color: var(--slate-500); margin-top: 0.2rem;">Select multiple photos at once • Accepts PNG, JPG, JPEG, WEBP</div>
+                </div>
+
+                <div id="memory-upload-progress" style="display: none; padding: 0.5rem; font-size: 0.82rem; color: var(--gold-600); font-weight: 600;">
+                  ⏳ Optimizing images for gallery...
+                </div>
+
+                <!-- Multi-image Preview Grid -->
+                <div id="memory-preview-container" style="display: none; margin-top: 0.75rem; text-align: left;">
+                  <div id="memory-preview-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 0.5rem; max-height: 180px; overflow-y: auto; padding: 0.35rem; background: var(--white); border-radius: var(--radius-sm); border: 1px solid var(--slate-200);">
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                    <span id="memory-preview-summary" style="font-size: 0.76rem; color: var(--slate-600);"></span>
+                    <div style="display:flex; gap:0.4rem;">
+                      <button type="button" class="btn btn-xs btn-outline-navy" onclick="event.stopPropagation(); document.getElementById('memory-file-input').click();">+ Add More</button>
+                      <button type="button" class="btn btn-xs btn-outline-danger" onclick="event.stopPropagation(); resetMemoryFileInput();">Clear All</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Story / Details -->
+            <div class="form-group">
+              <label class="form-label">Memory Details / Story</label>
+              <textarea id="memory-details" rows="3" class="form-textarea" placeholder="Describe the moment, the conversation, or funny physics incident..."></textarea>
+            </div>
+
+            <!-- Others Info -->
+            <div class="form-group">
+              <label class="form-label">Others Info / Batchmates Present</label>
+              <input type="text" id="memory-other-info" class="form-input" placeholder="e.g. With Nahid, Tanvir, Sakib, Dr. Rafiq Sir">
+            </div>
+
+            <!-- Admin Review Notice -->
+            <div style="background: rgba(212,175,55,0.12); border-left: 3px solid var(--gold-500); padding: 0.75rem 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem; font-size: 0.8rem; color: var(--navy-900);">
+              🛡️ <strong>Verification Policy:</strong> Submitted memories are routed to the <strong>Admin Dashboard Notification Section</strong> and will be published live to this gallery once approved by the Batch Administrator.
+            </div>
+
+            <div style="display: flex; gap: 0.75rem;">
+              <button type="submit" id="submit-memory-btn" class="btn btn-navy" style="flex: 1;">
+                Submit for Admin Approval 🚀
+              </button>
+              <button type="button" class="btn btn-outline-navy" onclick="closeAddMemoryModal()">
+                Cancel
+              </button>
+            </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       GLOBAL FOOTER
+       ======================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border: none; padding-top: 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.25rem;">
+        <div>© 2024–2025 Paradox-147, Department of Physics, Rajshahi College. • Official Email: <a href="mailto:mail.paradox147@gmail.com" style="color:var(--gold-400); font-weight:600;">mail.paradox147@gmail.com</a></div>
+        <div class="developer-credit">
+          <span>Developed by</span>
+          <a href="https://nahid.page.gd" target="_blank" rel="noopener noreferrer" class="developer-portfolio-link" title="Visit Portfolio of MD. KHAIRUL ISLAM NAHID (https://nahid.page.gd)">
+            <span>MD. KHAIRUL ISLAM NAHID</span>
+            <svg class="dev-link-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+        </div>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="index.html">Home</a>
+          <a href="students.html">Students</a>
+          <a href="notices.html">Notices</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Login | Paradox-147 (Physics, Rajshahi College)</title>
+  <meta name="description" content="Batch portal login for Paradox-147 — The 147th Honours Batch (2024-25 Session), Department of Physics, Rajshahi College, Rajshahi.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/batch-logo.png">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .input-wrapper-with-icon {
+      position: relative;
+    }
+    .toggle-pass-icon {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--slate-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .toggle-pass-icon:hover {
+      color: var(--navy-900);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Minimal Header -->
+  <header class="navbar" style="position: static; height: 70px;">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="assets/images/batch-logo.png" alt="PARADOX-147 Crest" class="brand-crest-img">
+        <div class="brand-info">
+          <span class="brand-name">PARADOX-147</span>
+          <span class="brand-sub">Dept. of Physics • Rajshahi College</span>
+        </div>
+      </a>
+      <div>
+        <a href="index.html" class="btn btn-sm btn-outline-gold">← Return to Home</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="auth-page">
+    <div class="auth-card">
+      <!-- Header with Academic Seal -->
+      <div class="auth-header">
+        <img src="assets/images/batch-logo.png" alt="PARADOX-147 Batch Crest" class="auth-crest-img">
+        <h2>PARADOX-147 Portal</h2>
+        <p style="color:var(--gold-400); font-weight:600; font-size:0.95rem; margin-bottom:0.25rem;">The 147th Honours Batch (Session 2024-25)</p>
+        <p style="color:var(--slate-300); font-size:0.85rem; margin-bottom:0.35rem;">Department of Physics, Rajshahi College, Rajshahi</p>
+        <div style="font-size:0.8rem; color:var(--gold-300); font-style:italic;">
+          “A beautiful contradiction of Chaos and Brilliance.”
+        </div>
+        <div style="margin-top: 0.65rem; display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.4); padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.78rem; color: #fef08a;">
+          Official Portal Email: <a href="mailto:mail.paradox147@gmail.com" style="color: #ffffff; font-weight: 700; text-decoration: underline;">mail.paradox147@gmail.com</a>
+        </div>
+      </div>
+
+      <!-- Tab Switcher (Student Login vs Admin Login) -->
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" data-tab="student-login" role="tab" aria-selected="true" id="tab-btn-student-login">
+          Student Login
+        </button>
+        <button class="auth-tab" data-tab="admin-login" role="tab" aria-selected="false" id="tab-btn-admin-login">
+          Admin / CR Login
+        </button>
+      </div>
+
+      <!-- Card Body Form -->
+      <div class="auth-body">
+        <!-- Global Notification Banner (for redirects / pending status) -->
+        <div id="auth-alert-banner" style="display:none; padding:0.85rem 1rem; border-radius:var(--radius-sm); font-size:0.86rem; margin-bottom:1.25rem; line-height:1.4;"></div>
+
+        <!-- 1. SIGN IN PANEL (STUDENT & ADMIN) -->
+        <div id="auth-login-panel">
+          <!-- One-Click Demo Helper Pills -->
+          <div class="demo-pill-group" id="demo-pills-container">
+            <span><strong>Quick Test:</strong></span>
+            <button type="button" class="demo-chip" id="fill-student-demo">Student Demo</button>
+          </div>
+
+          <p id="auth-role-helper" style="font-size:0.84rem; color:var(--slate-500); margin-bottom:1.25rem;">
+            Access your student dashboard, academic routine, and batch metrics.
+          </p>
+
+          <form id="auth-login-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" id="auth-identifier-label">Student ID (Roll) or Registered Email</label>
+              <input type="text" id="auth-identifier" class="form-input" placeholder="e.g. 241076102 or student@gmail.com" autocomplete="username" required>
+              <div class="form-feedback" style="display:none;"></div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <div class="input-wrapper-with-icon">
+                <input type="password" id="auth-password" class="form-input" placeholder="••••••••" autocomplete="current-password" required>
+                <span class="toggle-pass-icon" id="auth-toggle-password" title="Toggle password visibility">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                </span>
+              </div>
+              <div class="form-feedback" style="display:none;"></div>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; color: var(--slate-600); cursor: pointer;">
+                <input type="checkbox" id="remember-me" style="width: 16px; height: 16px;" checked>
+                Remember this workstation
+              </label>
+              <button type="button" id="btn-forgot-password" onclick="openForgotPasswordModal()" style="background: none; border: none; padding: 0; color: var(--navy-800); font-size: 0.86rem; font-weight: 600; text-decoration: underline; cursor: pointer;">
+                Forgot Password?
+              </button>
+            </div>
+
+            <button type="submit" class="btn btn-gold" id="auth-submit-btn" style="width: 100%; font-size: 1rem; padding: 0.85rem; font-weight: 700;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              Sign In to Portal
+            </button>
+          </form>
+
+          <!-- New Student Sign Up Prompt -->
+          <div id="new-student-cta" style="margin-top: 1.5rem; padding: 1.15rem; background: var(--navy-50); border: 1px solid var(--navy-100); border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 0.86rem; color: var(--navy-900); font-weight: 600; margin-bottom: 0.35rem;">
+              Are you an enrolled student without an account?
+            </div>
+            <div style="font-size: 0.8rem; color: var(--slate-500); margin-bottom: 0.75rem;">
+              Submit your verification request to get approved by CR Nahid.
+            </div>
+            <button type="button" class="btn btn-outline-gold" id="btn-goto-signup" style="width: 100%; font-weight: 700; font-size: 0.9rem;">
+              Sign Up and Student Verification &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. SIGN UP & VERIFICATION PANEL -->
+        <div id="auth-signup-panel" style="display: none;">
+          <div style="background: rgba(212, 175, 55, 0.12); border-left: 4px solid var(--gold-500); padding: 0.85rem 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem;">
+            <div style="font-weight: 700; color: var(--navy-950); font-size: 0.88rem; margin-bottom: 0.25rem;">
+              Student Account Verification
+            </div>
+            <div style="font-size: 0.82rem; color: var(--slate-700); line-height: 1.45;">
+              After registration, your request will be reviewed and approved by CR <strong>MD. KHAIRUL ISLAM NAHID</strong> before dashboard access is permitted. You can view public information in the meantime.
+            </div>
+          </div>
+
+          <form id="auth-signup-form" novalidate>
+            <div class="form-group">
+              <label class="form-label">Full Name <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="signup-name" class="form-input" placeholder="e.g. Tanvir Ahmed" required>
+              <div class="form-feedback" style="display:none;"></div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Student ID (Roll) <span style="color:var(--danger-500);">*</span></label>
+                <input type="text" id="signup-roll" class="form-input" placeholder="e.g. 2024227185" required>
+                <div class="form-feedback" style="display:none;"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Registration No. <span style="color:var(--danger-500);">*</span></label>
+                <input type="text" id="signup-reg" class="form-input" placeholder="e.g. 24227106970" required>
+                <div class="form-feedback" style="display:none;"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Phone Number <span style="color:var(--danger-500);">*</span></label>
+                <input type="tel" id="signup-phone" class="form-input" placeholder="e.g. +8801859445559" required>
+                <div class="form-feedback" style="display:none;"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">University / Personal Email <span style="color:var(--danger-500);">*</span></label>
+                <input type="email" id="signup-email" class="form-input" placeholder="e.g. student@gmail.com" required>
+                <div class="form-feedback" style="display:none;"></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Blood Group</label>
+                <select id="signup-blood" class="form-select">
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+" selected>B+</option>
+                  <option value="B-">B-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Home District</label>
+                <input type="text" id="signup-district" class="form-input" placeholder="e.g. Rajshahi" value="Rajshahi">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Set Password <span style="color:var(--danger-500);">*</span></label>
+                <input type="password" id="signup-password" class="form-input" placeholder="••••••••" required>
+                <div class="form-feedback" style="display:none;"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm Password <span style="color:var(--danger-500);">*</span></label>
+                <input type="password" id="signup-confirm-password" class="form-input" placeholder="••••••••" required>
+                <div class="form-feedback" style="display:none;"></div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-gold" id="signup-submit-btn" style="width: 100%; font-size: 1rem; padding: 0.85rem; font-weight: 700; margin-top: 0.5rem;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              Verify Email & Submit Application
+            </button>
+            <div style="font-size:0.78rem; color:var(--slate-500); text-align:center; margin-top:0.4rem;">
+              A 6-digit verification code will be automatically dispatched to your email from <strong>mail.paradox147@gmail.com</strong>
+            </div>
+          </form>
+
+          <div style="margin-top: 1.25rem; text-align: center; font-size: 0.85rem; color: var(--slate-500);">
+            Already have an approved account? <br>
+            <a href="javascript:void(0)" id="link-goto-login" style="color: var(--navy-800); font-weight: 700; text-decoration: underline;">Return to Sign In</a>
+          </div>
+        </div>
+
+        <!-- 3. VERIFICATION SUBMITTED CONFIRMATION PANEL -->
+        <div id="auth-success-panel" style="display: none;">
+          <div style="text-align: center; padding: 1.25rem 0;">
+            <div style="width: 68px; height: 68px; border-radius: 50%; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; border: 2px solid #F59E0B;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h3 style="font-size: 1.35rem; color: var(--navy-900); margin-bottom: 0.4rem;">Verification Request Submitted</h3>
+            <div style="display: inline-block; background: #FEF3C7; color: #92400E; font-weight: 700; font-size: 0.82rem; padding: 0.35rem 0.85rem; border-radius: 999px; margin-bottom: 1.25rem; border: 1px solid #FCD34D;">
+              Status: PENDING APPROVAL
+            </div>
+            <div style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 1rem; text-align: left; font-size: 0.88rem; color: var(--slate-700); line-height: 1.5; margin-bottom: 1.5rem;">
+              <div style="margin-bottom: 0.35rem;"><strong>Student Name:</strong> <span id="success-display-name">Student</span></div>
+              <div style="margin-bottom: 0.35rem;"><strong>Student ID / Roll:</strong> <code id="success-display-id" style="font-weight:700; color:var(--navy-900);"></code></div>
+              <div style="margin-bottom: 0.75rem;"><strong>Registered Email:</strong> <span id="success-display-email"></span></div>
+              <div style="border-top: 1px dashed var(--slate-300); padding-top: 0.65rem; font-size: 0.83rem; color: var(--slate-600);">
+                Notice: Your verification request has been forwarded to Class Representative & Administrator <strong>MD. KHAIRUL ISLAM NAHID</strong>. Once approved, you can log in using your email and password to access the Student Dashboard.
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <a href="students.html" class="btn btn-navy" style="width: 100%;">
+                Browse Public Site & Directory &rarr;
+              </a>
+              <button type="button" class="btn btn-outline-gold" id="btn-success-to-login" style="width: 100%;">
+                Sign In with Approved Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Login Page Footer with Developer Credit -->
+      <footer class="login-page-footer" style="margin-top: 2rem; padding: 1.25rem 0 1rem; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 0.82rem; color: var(--slate-400); display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+        <div>© 2024–2025 Paradox-147, Department of Physics, Rajshahi College.</div>
+        <div class="developer-credit">
+          <span>Developed by</span>
+          <a href="https://nahid.page.gd" target="_blank" rel="noopener noreferrer" class="developer-portfolio-link" title="Visit Portfolio of MD. KHAIRUL ISLAM NAHID (https://nahid.page.gd)">
+            <span>MD. KHAIRUL ISLAM NAHID</span>
+            <svg class="dev-link-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       MODALS: FORGOT PASSWORD & SIGN UP OTP VERIFICATION
+       ======================================================================== -->
+
+  <!-- 0. Forgot Password Recovery Modal -->
+  <div class="modal-backdrop" id="forgot-password-modal">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="margin: 0; font-size: 1.25rem; color: var(--navy-950);">Reset Student Password</h3>
+          <span style="font-size: 0.8rem; color: var(--slate-400);">Official Dispatch from mail.paradox147@gmail.com</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="forgot-modal-close-btn" onclick="closeForgotPasswordModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.5rem;">
+        <!-- Step 1: Email Input -->
+        <div id="forgot-step-email">
+          <p style="font-size: 0.88rem; color: var(--slate-600); line-height: 1.5; margin-bottom: 1.25rem;">
+            Enter your registered student email address or student ID. We will automatically send a 6-digit verification code from <strong>mail.paradox147@gmail.com</strong> to verify your identity.
+          </p>
+
+          <form id="forgot-email-form" novalidate onsubmit="handleForgotEmailSubmit(event)">
+            <div class="form-group">
+              <label class="form-label" for="forgot-email-input">Registered Student Email or Student ID</label>
+              <input type="text" id="forgot-email-input" class="form-input" placeholder="e.g. student@gmail.com or 241076102" autocomplete="username" required>
+              <div id="forgot-email-feedback" class="form-feedback" style="display: none;"></div>
+            </div>
+
+            <button type="submit" class="btn btn-gold" id="btn-forgot-send-otp" style="width: 100%; font-weight: 700; font-size: 1rem; padding: 0.85rem; margin-top: 0.5rem;">
+              Send Verification Code
+            </button>
+          </form>
+        </div>
+
+        <!-- Step 2: 6-Digit OTP Verification -->
+        <div id="forgot-step-otp" style="display: none;">
+          <div style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem;">
+            <p style="font-size: 0.88rem; color: var(--slate-700); margin: 0 0 0.4rem 0;">
+              A 6-digit verification code has been dispatched from <strong>mail.paradox147@gmail.com</strong> to your email address:
+            </p>
+            <div style="font-size: 0.95rem; font-weight: 700; color: var(--navy-900); word-break: break-all;">
+              <code id="forgot-otp-email-target" style="background: var(--white); padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid var(--slate-300);">student@gmail.com</code>
+            </div>
+          </div>
+
+          <form id="forgot-otp-form" novalidate onsubmit="handleForgotOtpSubmit(event)">
+            <div class="form-group" style="text-align: center;">
+              <label class="form-label" for="forgot-otp-input" style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem;">Enter 6-Digit Verification Code</label>
+              <input type="text" id="forgot-otp-input" class="form-input" placeholder="------" maxlength="6" pattern="[0-9]{6}" autocomplete="one-time-code" required style="font-size: 1.8rem; font-weight: 800; letter-spacing: 0.35em; text-align: center; padding: 0.75rem; font-family: monospace; color: var(--navy-900); max-width: 260px; margin: 0 auto;">
+              <div id="forgot-otp-feedback" class="form-feedback" style="display: none; text-align: center; margin-top: 0.4rem;"></div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0; font-size: 0.83rem;">
+              <span id="forgot-otp-timer-text" style="color: var(--slate-500);">Resend code in <strong id="forgot-otp-countdown">60</strong>s</span>
+              <button type="button" id="forgot-otp-resend-btn" onclick="handleForgotResendOtp()" class="btn btn-xs btn-ghost" style="display: none; color: var(--navy-800); font-weight: 700; text-decoration: underline;">
+                Resend Code
+              </button>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; flex-direction: column;">
+              <button type="submit" class="btn btn-gold" id="btn-verify-forgot-otp" style="width: 100%; font-weight: 700; font-size: 1rem; padding: 0.85rem;">
+                Verify Code
+              </button>
+              <button type="button" class="btn btn-ghost" onclick="switchForgotStep('email')" style="width: 100%; font-size: 0.88rem;">
+                &larr; Change Email Address
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 3: Set New Password -->
+        <div id="forgot-step-newpass" style="display: none;">
+          <p style="font-size: 0.88rem; color: var(--slate-600); line-height: 1.5; margin-bottom: 1.25rem;">
+            Code verified. Enter a new password for your student portal account.
+          </p>
+
+          <form id="forgot-newpass-form" novalidate onsubmit="handleForgotNewpassSubmit(event)">
+            <div class="form-group">
+              <label class="form-label" for="forgot-new-password">New Password</label>
+              <input type="password" id="forgot-new-password" class="form-input" placeholder="••••••••" autocomplete="new-password" required>
+              <div id="forgot-newpass-feedback" class="form-feedback" style="display: none;"></div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="forgot-confirm-password">Confirm New Password</label>
+              <input type="password" id="forgot-confirm-password" class="form-input" placeholder="••••••••" autocomplete="new-password" required>
+              <div id="forgot-confirmpass-feedback" class="form-feedback" style="display: none;"></div>
+            </div>
+
+            <button type="submit" class="btn btn-gold" id="btn-forgot-submit-newpass" style="width: 100%; font-weight: 700; font-size: 1rem; padding: 0.85rem; margin-top: 0.5rem;">
+              Update Password
+            </button>
+          </form>
+        </div>
+
+        <!-- Step 4: Success State -->
+        <div id="forgot-step-success" style="display: none; text-align: center; padding: 1rem 0;">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; border: 2px solid #86efac;">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h4 style="font-size: 1.25rem; color: var(--navy-900); margin-bottom: 0.5rem;">Password Updated Successfully</h4>
+          <p style="font-size: 0.88rem; color: var(--slate-600); line-height: 1.5; margin-bottom: 1.5rem;">
+            Your portal password has been updated via <strong>mail.paradox147@gmail.com</strong>. You can now log in with your updated credentials.
+          </p>
+          <button type="button" class="btn btn-navy" id="btn-forgot-finish-login" onclick="finishForgotPasswordFlow()" style="width: 100%; font-weight: 700; padding: 0.85rem;">
+            Sign In with New Password
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Sign Up Email OTP Verification Modal -->
+  <div class="modal-backdrop" id="signup-otp-modal">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="margin:0; font-size:1.25rem;">Verify Your Student Email</h3>
+          <span style="font-size:0.8rem; color:var(--slate-400);">Automated Security Check • mail.paradox147@gmail.com</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeSignupOtpModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="padding:1.5rem;">
+        <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:var(--radius-md); padding:1rem; margin-bottom:1.25rem;">
+          <p style="font-size:0.88rem; color:var(--slate-700); margin:0 0 0.5rem 0;">
+            A 6-digit verification code has been dispatched from official email <strong style="color:var(--navy-900);">mail.paradox147@gmail.com</strong> to:
+          </p>
+          <div style="font-size:1rem; font-weight:700; color:var(--navy-900); word-break:break-all;">
+            <code id="signup-otp-email-display" style="background:var(--white); padding:0.25rem 0.5rem; border-radius:4px; border:1px solid var(--slate-300);">student@gmail.com</code>
+          </div>
+        </div>
+
+        <form id="signup-otp-form" onsubmit="handleSignupOtpSubmit(event)">
+          <div class="form-group" style="text-align:center;">
+            <label class="form-label" style="font-size:0.9rem; font-weight:700; margin-bottom:0.6rem;">Enter 6-Digit Verification Code</label>
+            <input type="text" id="signup-otp-input" class="form-input" placeholder="------" maxlength="6" pattern="[0-9]{6}" autocomplete="one-time-code" required style="font-size:1.8rem; font-weight:800; letter-spacing:0.35em; text-align:center; padding:0.75rem; font-family:monospace; color:var(--navy-900); max-width:280px; margin:0 auto;">
+            <div id="signup-otp-feedback" class="form-feedback" style="display:none; text-align:center; margin-top:0.4rem;"></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin:1rem 0; font-size:0.83rem;">
+            <span id="signup-otp-timer-text" style="color:var(--slate-500);">Resend code in <strong id="signup-otp-countdown">60</strong>s</span>
+            <button type="button" id="signup-otp-resend-btn" onclick="handleSignupOtpResend()" class="btn btn-xs btn-ghost" style="display:none; color:var(--navy-800); font-weight:700; text-decoration:underline;">
+              Resend Code from mail.paradox147@gmail.com
+            </button>
+          </div>
+
+          <div style="display:flex; gap:0.75rem; flex-direction:column;">
+            <button type="submit" class="btn btn-gold" id="btn-verify-signup-otp" style="width:100%; font-weight:700; font-size:1rem; padding:0.85rem;">
+              Verify Email & Submit Application
+            </button>
+            <button type="button" class="btn btn-ghost" onclick="closeSignupOtpModal()" style="width:100%; font-size:0.88rem;">
+              &larr; Back & Edit Information
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Claim Profile Modal (Legacy Fallback) -->
+  <div class="modal-backdrop" id="claim-profile-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Claim Student Profile</h3>
+        <button class="modal-close-btn" onclick="closeClaimProfileModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.9rem; color: var(--slate-600); margin-bottom: 1.25rem;">
+          If you are an enrolled student of the 147th Honours Batch (Dept. of Physics, Rajshahi College) not yet active in the system, enter your registration info below for Class Representative approval.
+        </p>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" placeholder="Your academic name" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">College / Exam Roll Number</label>
+            <input type="text" class="form-input" placeholder="2410761XX" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Blood Group</label>
+            <select class="form-select">
+              <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+              <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-gold" style="width:100%;" onclick="handleClaimSubmit()">
+          Submit for CR Verification
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/email-service.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

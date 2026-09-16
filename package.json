@@ -1,0 +1,21 @@
+{
+  "name": "paradoxian",
+  "version": "1.0.0",
+  "description": "Department of Physics, Rajshahi College - Paradox-147 Portal",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js",
+    "test": "node tests/test-password-reset-smtp.js",
+    "test:all": "node tests/test-super-admin-permanence.js && node tests/test-backend-governance.js && node tests/test-password-reset-smtp.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "nodemailer": "^10.0.10"
+  }
+}

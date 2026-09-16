@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Dashboard | Paradox-147 (Physics, Rajshahi College)</title>
+  <meta name="description" content="Dual-view academic dashboard for Paradox-147 — The 147th Honours Batch (2024-25 Session), Department of Physics, Rajshahi College.">
+  
+  <!-- Instant Strict Authentication Guard: Immediately blocks unauthorized visitors & redirects to sign in -->
+  <script>
+    (function() {
+      try {
+        var raw = localStorage.getItem("paradox147_current_user_v3");
+        if (!raw || raw === "null" || raw === "undefined") {
+          sessionStorage.setItem("auth_redirect_reason", "Authentication required. Please sign in to access the dashboard.");
+          window.location.replace("login.html?redirect=dashboard");
+          return;
+        }
+        var user = JSON.parse(raw);
+        if (!user || (!user.id && !user.roll && !user.email)) {
+          sessionStorage.setItem("auth_redirect_reason", "Session expired. Please sign in again.");
+          window.location.replace("login.html?redirect=dashboard");
+          return;
+        }
+      } catch (e) {
+        window.location.replace("login.html?redirect=dashboard");
+      }
+    })();
+  </script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/batch-logo.png">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Dashboard specific refinements */
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .notification-bell-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--slate-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate-700);
+      position: relative;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .notification-bell-btn:hover {
+      background: var(--navy-50);
+      color: var(--navy-900);
+    }
+    .notif-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--danger-500);
+      border: 2px solid var(--white);
+    }
+    @media (max-width: 900px) {
+      .student-columns {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       GLOBAL NAVBAR
+       ======================================================================== -->
+  <header class="navbar" id="main-navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="assets/images/batch-logo.png" alt="PARADOX-147 Crest" class="brand-crest-img">
+        <div class="brand-info">
+          <span class="brand-name">PARADOX-147</span>
+          <span class="brand-sub">Dept. of Physics • Rajshahi College</span>
+        </div>
+      </a>
+
+      <nav class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="students.html" class="nav-link">Directory</a>
+        <a href="gallery.html" class="nav-link">Gallery</a>
+        <a href="notices.html" class="nav-link">Notices</a>
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn btn-sm btn-outline-gold" onclick="window.location.href='index.html'">Public Site ↗</button>
+        <button class="hamburger-btn" aria-label="Toggle navigation menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       DUAL-VIEW DASHBOARD LAYOUT
+       ======================================================================== -->
+  <div class="dashboard-layout">
+    
+    <!-- 1. SIDEBAR NAVIGATION -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-user-card">
+        <img id="sidebar-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" alt="User Avatar" class="sidebar-avatar">
+        <div style="overflow: hidden;">
+          <div class="sidebar-user-name" id="sidebar-username">MD. KHAIRUL ISLAM NAHID</div>
+          <div class="sidebar-user-role" id="sidebar-userrole">CR & Administrator</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="javascript:void(0)" class="sidebar-link active" data-tab="overview" id="sidebar-item-dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard Overview
+        </a>
+        <a href="javascript:void(0)" class="sidebar-link" data-tab="profile" id="sidebar-item-profile">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          My Profile
+        </a>
+        <a href="javascript:void(0)" class="sidebar-link" data-tab="routine" id="sidebar-item-routine">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Class Routine
+        </a>
+        <a href="javascript:void(0)" class="sidebar-link" data-tab="notices" id="sidebar-item-messages">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Notices / Circulars
+        </a>
+        <a href="javascript:void(0)" class="sidebar-link" data-tab="memories" id="sidebar-item-memories">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span id="sidebar-memories-text">Contribute Memory</span>
+        </a>
+        <a href="javascript:void(0)" class="sidebar-link" data-tab="cms" id="sidebar-item-cms" style="display:none;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Site Content Manager
+        </a>
+        <a href="javascript:void(0)" class="sidebar-link" data-tab="users" id="sidebar-item-users">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span id="sidebar-users-text">Student Directory</span>
+        </a>
+        <a href="javascript:void(0)" class="sidebar-link" data-tab="settings" id="sidebar-item-settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="javascript:void(0)" id="dashboard-logout-btn" class="sidebar-link" style="color: var(--slate-400);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </a>
+        <div style="padding: 0.75rem 1rem; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.74rem; color: var(--slate-400);">
+          <div style="color: var(--gold-400); font-weight: 700; margin-bottom: 0.15rem;">Official Portal Email:</div>
+          <a href="mailto:mail.paradox147@gmail.com" style="color: var(--slate-300); text-decoration: underline; word-break: break-all;">mail.paradox147@gmail.com</a>
+        </div>
+        <div style="padding: 0.65rem 1rem; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.72rem; color: var(--slate-400);">
+          <div class="developer-credit" style="font-size: 0.72rem;">
+            <span>Developed by</span>
+            <a href="https://nahid.page.gd" target="_blank" rel="noopener noreferrer" class="developer-portfolio-link" style="font-size: 0.72rem; padding: 0.1rem 0.35rem;" title="Visit Portfolio of MD. KHAIRUL ISLAM NAHID (https://nahid.page.gd)">
+              <span>MD. KHAIRUL ISLAM NAHID</span>
+              <svg class="dev-link-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN DASHBOARD CONTENT AREA -->
+    <div class="dashboard-main">
+      
+      <!-- Topbar with Live Dual-View Switcher -->
+      <header class="dashboard-topbar">
+        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+          <h2 style="font-size: 1.4rem; margin: 0; color: var(--navy-900);">Honours Portal</h2>
+          <span id="active-role-display-badge" class="badge badge-gold">Viewing as Student</span>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Dual-View Toggler (Student View ⇄ Admin View) -->
+          <div class="role-switcher-container">
+            <span class="role-switcher-label">View Mode:</span>
+            <div class="role-btn-group">
+              <button class="role-toggle-btn active" id="toggle-role-student">
+                👨‍🎓 Student View
+              </button>
+              <button class="role-toggle-btn" id="toggle-role-admin">
+                🛡️ Admin / CR View
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Download Roster Button (CR / Admin Dashboard Only) -->
+          <button type="button" id="topbar-download-roster-btn" class="btn btn-xs btn-outline-navy" onclick="openExportRosterModal()" style="font-weight:700; display:none; align-items:center; gap:0.4rem; padding: 0.4rem 0.75rem;" title="Download Official Student Roster (PDF)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Roster (PDF)
+          </button>
+
+          <!-- Notification Bell & Dropdown Flyout -->
+          <div class="notif-bell-container" style="position: relative;">
+            <div class="notification-bell-btn" id="topbar-notif-bell" title="Batch Notifications" onclick="toggleNotificationDropdown(event)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="notif-badge" id="topbar-notif-badge" style="display:none;"></span>
+            </div>
+            <!-- Notification Dropdown Menu -->
+            <div class="notification-dropdown-menu" id="notification-dropdown-menu" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); width: 440px; max-width: 95vw; background: var(--white); border-radius: var(--radius-md); box-shadow: 0 16px 40px rgba(0,0,0,0.22); border: 1px solid var(--slate-200); z-index: 9999; overflow: hidden;">
+              <!-- Header with Read / Unread Counters -->
+              <div style="padding: 0.85rem 1rem; background: var(--navy-900); color: var(--white); display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <div style="font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 0.45rem;">
+                  🔔 Batch Notifications
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span id="notif-unread-count-pill" class="badge badge-gold" style="font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem;">0 Unread</span>
+                  <span id="notif-read-count-pill" class="badge" style="background: rgba(255,255,255,0.18); color: var(--white); font-size: 0.72rem; padding: 0.2rem 0.55rem;">0 Read</span>
+                  <span id="notif-count-badge" style="display:none;">0 New</span>
+                </div>
+              </div>
+
+              <!-- Filter Controls (Categories & Status Filter Bar) -->
+              <div id="notif-filter-controls" style="background: var(--slate-50); border-bottom: 1px solid var(--slate-200); padding: 0.5rem 0.75rem;">
+                <!-- Filled dynamically by js/dashboard.js -->
+              </div>
+
+              <!-- Notification Items List -->
+              <div id="notification-items-list" style="max-height: 390px; overflow-y: auto; padding: 0.2rem 0;">
+                <!-- Filled dynamically by js/dashboard.js -->
+              </div>
+
+              <!-- Footer Actions -->
+              <div style="padding: 0.65rem 1rem; background: var(--slate-50); border-top: 1px solid var(--slate-200); display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; gap: 0.5rem; flex-wrap: wrap;">
+                <div style="display: flex; gap: 0.4rem; align-items: center;">
+                  <button type="button" class="btn btn-xs btn-outline-navy" onclick="markAllNotificationsAsRead(event)" title="Mark all notifications as read">Mark all read</button>
+                  <button type="button" class="btn btn-xs btn-outline-danger" onclick="handleClearReadNotifications(event)" title="Delete all read notifications">Clear read</button>
+                </div>
+                <span style="color: var(--slate-500); font-size: 0.72rem;">Live Batch Alerts</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+      <!-- Dynamic View Container (Toggled via js/dashboard.js) -->
+      <main class="dashboard-content" id="dashboard-view-container">
+        <!-- Rendered dynamically by js/dashboard.js -->
+      </main>
+
+      <!-- Main Dashboard Footer with Developer Credit -->
+      <footer class="dashboard-footer">
+        <div>© 2024–2025 Paradox-147, Department of Physics, Rajshahi College. All rights reserved.</div>
+        <div class="developer-credit">
+          <span>Developed by</span>
+          <a href="https://nahid.page.gd" target="_blank" rel="noopener noreferrer" class="developer-portfolio-link" title="Visit Portfolio of MD. KHAIRUL ISLAM NAHID (https://nahid.page.gd)">
+            <span>MD. KHAIRUL ISLAM NAHID</span>
+            <svg class="dev-link-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       ADD NEW STUDENT MODAL (ADMIN)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="add-student-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Add New Student Record</h3>
+        <button class="modal-close-btn" onclick="closeAddStudentModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="add-student-form">
+          <div class="form-group">
+            <label class="form-label">Full Name <span style="color:var(--danger-500);">*</span></label>
+            <input type="text" id="new-std-name" class="form-input" placeholder="e.g. Mahir Faisal" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Student ID (Roll) <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="new-std-roll" class="form-input" placeholder="e.g. 241076135" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Registration No. <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="new-std-reg" class="form-input" placeholder="e.g. 202476135" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Father's Name <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="new-std-father" class="form-input" placeholder="e.g. Md. Rafiqul Islam" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mother's Name <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="new-std-mother" class="form-input" placeholder="e.g. Mrs. Khadeja Begum" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Original Date of Birth <span style="color:var(--danger-500);">*</span></label>
+              <input type="date" id="new-std-dob-orig" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Certificate Date of Birth <span style="color:var(--danger-500);">*</span></label>
+              <input type="date" id="new-std-dob-cert" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone Number <span style="color:var(--danger-500);">*</span></label>
+              <input type="tel" id="new-std-phone" class="form-input" placeholder="e.g. +8801859445559" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address <span style="color:var(--danger-500);">*</span></label>
+              <input type="email" id="new-std-email" class="form-input" placeholder="student@gmail.com" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Blood Group</label>
+              <select id="new-std-blood" class="form-select">
+                <option value="A+">A+</option><option value="A-">A-</option>
+                <option value="B+">B+</option><option value="B-">B-</option>
+                <option value="O+" selected>O+</option><option value="O-">O-</option>
+                <option value="AB+">AB+</option><option value="AB-">AB-</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Home District</label>
+              <input type="text" id="new-std-district" class="form-input" placeholder="e.g. Rajshahi" value="Rajshahi">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Batch Role</label>
+            <select id="new-std-role" class="form-select">
+              <option value="Member">Batch Member</option>
+              <option value="Assistant CR">Assistant CR</option>
+              <option value="Class Representative">Class Representative</option>
+              <option value="Executive Member">Executive Member</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-gold" style="width: 100%;">
+            Register Student into Directory
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       STUDENT DETAILS MODAL
+       ======================================================================== -->
+  <div class="modal-backdrop" id="student-detail-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-student-name">Student Profile Details</h3>
+        <button class="modal-close-btn" onclick="closeStudentModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: flex; gap: 1.5rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <img id="modal-student-avatar" src="" alt="Avatar" style="width: 84px; height: 84px; border-radius: 50%; object-fit: cover; border: 3px solid var(--gold-500); box-shadow: var(--shadow-md);">
+          <div>
+            <div id="modal-student-role" class="badge badge-gold" style="margin-bottom: 0.35rem;">Batch Member</div>
+            <div id="modal-student-roll" style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: var(--navy-900);">Roll: ••••••••</div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.4rem; align-items: center; flex-wrap: wrap;">
+              <span id="modal-student-blood-container" class="badge badge-blood" title="Blood Group">Blood: <strong id="modal-student-blood">O+</strong></span>
+              <span class="badge badge-navy" title="District">📍 <span id="modal-student-district">Rajshahi</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Locked academic notice (if applicable) -->
+        <div id="modal-academic-lock" class="modal-locked-section" style="display:none; margin-bottom:1.5rem;">
+          <div style="font-size:1.6rem; margin-bottom:0.35rem;">🔒</div>
+          <div style="font-weight:700; color:var(--navy-900); font-size:1rem; margin-bottom:0.35rem;">
+            Academic & Medical Data Restricted
+          </div>
+          <p style="font-size:0.84rem; color:var(--slate-600); max-width:400px; margin:0 auto 0.85rem auto; line-height:1.4;">
+            Roll numbers, registration IDs, blood group donor status, and academic transcripts are restricted to verified students of Paradox-147.
+          </p>
+        </div>
+
+        <div id="modal-bio-container" style="margin-bottom: 1.25rem;">
+          <h4 style="font-size: 0.9rem; text-transform: uppercase; color: var(--slate-500); letter-spacing: 0.05em; margin-bottom: 0.35rem;">
+            About / Bio
+          </h4>
+          <p id="modal-student-bio" style="font-size: 0.92rem; color: var(--slate-700); line-height: 1.6;"></p>
+        </div>
+
+        <div id="modal-skills-container" style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 0.9rem; text-transform: uppercase; color: var(--slate-500); letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+            Skills & Technical Focus
+          </h4>
+          <div id="modal-student-skills" style="display: flex; flex-wrap: wrap; gap: 0.5rem;"></div>
+        </div>
+
+        <!-- Official Parental & Date of Birth Identity -->
+        <div id="modal-family-dob-container" style="background: var(--slate-50); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--slate-200); margin-bottom: 1.25rem;">
+          <h4 style="font-size: 0.9rem; text-transform: uppercase; color: var(--slate-500); letter-spacing: 0.05em; margin-bottom: 0.75rem;">
+            Official Family & Birth Identity
+          </h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.88rem;">
+            <div>
+              <span style="color:var(--slate-500); display:block; font-size:0.75rem;">Father's Name</span>
+              <strong id="modal-student-father" style="color:var(--navy-900);">—</strong>
+            </div>
+            <div>
+              <span style="color:var(--slate-500); display:block; font-size:0.75rem;">Mother's Name</span>
+              <strong id="modal-student-mother" style="color:var(--navy-900);">—</strong>
+            </div>
+            <div>
+              <span style="color:var(--slate-500); display:block; font-size:0.75rem;">Original Date of Birth</span>
+              <strong id="modal-student-dob-orig" style="color:var(--navy-900);">—</strong>
+            </div>
+            <div>
+              <span style="color:var(--slate-500); display:block; font-size:0.75rem;">Certificate Date of Birth</span>
+              <strong id="modal-student-dob-cert" style="color:var(--gold-600);">—</strong>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: var(--slate-50); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--slate-200);">
+          <h4 style="font-size: 0.9rem; text-transform: uppercase; color: var(--slate-500); letter-spacing: 0.05em; margin-bottom: 0.75rem;">
+            Contact & Social Channels
+          </h4>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+            <div>
+              <strong>Email:</strong> <a id="modal-student-email" href="#" style="color: var(--navy-700);"></a>
+            </div>
+            <div id="modal-phone-container">
+              <strong>Phone / WhatsApp:</strong> <a id="modal-student-phone" href="#" style="color: var(--navy-700);"></a>
+              <span id="modal-phone-hidden-badge" style="display:none; color:var(--slate-400); font-style:italic;">[Not provided]</span>
+            </div>
+            <div id="modal-socials-container" style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              <!-- Dynamically populated with all social links -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <button type="button" class="btn btn-sm btn-ghost" onclick="closeStudentModal()">Close Window</button>
+        <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+          <button type="button" class="btn btn-sm btn-outline-gold" id="modal-download-profile-btn" onclick="downloadCurrentModalStudentProfile()" style="font-weight:700; display:none; align-items:center; gap:0.35rem;">
+            📄 Download Official Student Dossier (PDF)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       CLASS ROUTINE SLOT MODAL (ADD & EDIT)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="routine-slot-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="routine-modal-title">Class Routine Slot Editor</h3>
+        <button class="modal-close-btn" onclick="closeRoutineModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="routine-slot-form">
+          <input type="hidden" id="routine-slot-day-orig" value="">
+          <input type="hidden" id="routine-slot-index" value="-1">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Day of Week</label>
+              <select id="routine-slot-day" class="form-select" required>
+                <option value="Sunday">Sunday</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Class Time Slot</label>
+              <input type="text" id="routine-slot-time" class="form-input" placeholder="e.g. 10:00 AM - 11:30 AM" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Course / Subject Code & Title</label>
+            <input type="text" id="routine-slot-course" class="form-input" placeholder="e.g. PHY-401: Quantum Mechanics II" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Room / Laboratory</label>
+              <input type="text" id="routine-slot-room" class="form-input" placeholder="e.g. Room 304, Dept. Complex" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teacher / Faculty Instructor</label>
+              <input type="text" id="routine-slot-teacher" class="form-input" placeholder="e.g. Prof. Dr. M. Rahman" required>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
+            <button type="button" class="btn btn-ghost" onclick="closeRoutineModal()">Cancel</button>
+            <button type="submit" class="btn btn-gold" id="btn-save-routine-slot">Save Routine Slot</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       EDIT NOTICE MODAL (ADMIN)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="edit-notice-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Edit Batch Announcement</h3>
+        <button class="modal-close-btn" onclick="closeEditNoticeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-notice-form">
+          <input type="hidden" id="edit-notice-id" value="">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Notice Headline / Title</label>
+              <input type="text" id="edit-notice-title" class="form-input" placeholder="e.g. Schedule for Lab Test 2" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="edit-notice-category" class="form-select">
+                <option value="Academic">Academic</option>
+                <option value="Exams">Exams & Routines</option>
+                <option value="Events">Events & Tours</option>
+                <option value="Administration">Administration</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Effective Date</label>
+              <input type="date" id="edit-notice-date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Official Document Attachment Name</label>
+              <input type="text" id="edit-notice-filename" class="form-input" placeholder="e.g. Lab_Test_Schedule.pdf">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Detailed Notice Content</label>
+            <textarea id="edit-notice-desc" rows="4" class="form-textarea" placeholder="Write notice details..." required></textarea>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
+            <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem; font-weight:600; cursor:pointer;">
+              <input type="checkbox" id="edit-notice-urgent" style="width:18px; height:18px;">
+              Mark as High Priority / Urgent Notice
+            </label>
+
+            <div style="display:flex; gap:0.75rem;">
+              <button type="button" class="btn btn-ghost" onclick="closeEditNoticeModal()">Cancel</button>
+              <button type="submit" class="btn btn-navy">Save Notice Updates</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       EDIT STUDENT PROFILE MODAL (ADMIN FULL EDIT)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="edit-student-modal">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 id="edit-student-title">Edit Student Registry Profile</h3>
+        <button class="modal-close-btn" onclick="closeEditStudentModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-student-form">
+          <input type="hidden" id="edit-student-id" value="">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" id="edit-std-name" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="edit-std-role">Batch Role / Designation <span style="font-size: 0.78rem; font-weight: normal; color: var(--slate-500);">(Type custom role or select preset)</span></label>
+              <div style="display: flex; gap: 0.45rem; flex-direction: column;">
+                <input type="text" id="edit-std-role" class="form-input" placeholder="e.g. Cultural Secretary, Treasurer, Lab Coordinator..." list="role-presets-list" required style="font-weight:600;">
+                <datalist id="role-presets-list">
+                  <option value="Student"></option>
+                  <option value="Member"></option>
+                  <option value="Class Representative (CR)"></option>
+                  <option value="Assistant Class Representative (ACR)"></option>
+                  <option value="Batch Administrator"></option>
+                  <option value="Treasurer"></option>
+                  <option value="General Secretary"></option>
+                  <option value="Cultural Secretary"></option>
+                  <option value="Sports Secretary"></option>
+                  <option value="Lab Coordinator"></option>
+                  <option value="Executive Member"></option>
+                </datalist>
+                <div style="display: flex; gap: 0.3rem; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-xs btn-outline-gold" onclick="document.getElementById('edit-std-role').value='Member'">Member</button>
+                  <button type="button" class="btn btn-xs btn-outline-gold" onclick="document.getElementById('edit-std-role').value='Assistant CR'">Assistant CR</button>
+                  <button type="button" class="btn btn-xs btn-outline-gold" onclick="document.getElementById('edit-std-role').value='Treasurer'">Treasurer</button>
+                  <button type="button" class="btn btn-xs btn-outline-gold" onclick="document.getElementById('edit-std-role').value='Cultural Secretary'">Cultural Secretary</button>
+                  <button type="button" class="btn btn-xs btn-outline-gold" onclick="document.getElementById('edit-std-role').value='Sports Secretary'">Sports Secretary</button>
+                  <button type="button" class="btn btn-xs btn-outline-gold" onclick="document.getElementById('edit-std-role').value='Lab Coordinator'">Lab Coordinator</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Student ID (Roll) <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="edit-std-roll" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Registration No. <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="edit-std-reg" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Father's Name <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="edit-std-father" class="form-input" placeholder="Father's Full Name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mother's Name <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="edit-std-mother" class="form-input" placeholder="Mother's Full Name" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Original Date of Birth <span style="color:var(--danger-500);">*</span></label>
+              <input type="date" id="edit-std-dob-orig" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Certificate Date of Birth <span style="color:var(--danger-500);">*</span></label>
+              <input type="date" id="edit-std-dob-cert" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Blood Group</label>
+              <select id="edit-std-blood" class="form-select">
+                <option value="A+">A+</option><option value="A-">A-</option>
+                <option value="B+">B+</option><option value="B-">B-</option>
+                <option value="O+">O+</option><option value="O-">O-</option>
+                <option value="AB+">AB+</option><option value="AB-">AB-</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Home District</label>
+              <input type="text" id="edit-std-district" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email Address <span style="color:var(--danger-500);">*</span></label>
+              <input type="email" id="edit-std-email" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone / WhatsApp <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="edit-std-phone" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Account Status</label>
+              <select id="edit-std-status" class="form-select">
+                <option value="Active">Active (Full Access)</option>
+                <option value="Pending">Pending Verification</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Skills (Comma separated)</label>
+              <input type="text" id="edit-std-skills" class="form-input" placeholder="e.g. Quantum Physics, Python, Lab Research">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Bio / Academic Summary</label>
+            <textarea id="edit-std-bio" rows="2" class="form-textarea" placeholder="Short student summary..."></textarea>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.25rem;">
+            <button type="button" class="btn btn-ghost" onclick="closeEditStudentModal()">Cancel</button>
+            <button type="submit" class="btn btn-gold">Update Student Details</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================
+       EDIT BATCH STATS & TREASURY MODAL (ADMIN)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="edit-metrics-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Edit Batch Fund & Portal Metrics</h3>
+        <button class="modal-close-btn" onclick="closeEditMetricsModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-metrics-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Batch Treasury Fund</label>
+              <input type="text" id="edit-metric-fund" class="form-input" placeholder="e.g. ৳ 45,000" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fund Status Tag</label>
+              <input type="text" id="edit-metric-fundnote" class="form-input" placeholder="e.g. Treasury Healthy" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Completed Credits</label>
+              <input type="number" id="edit-metric-credits" class="form-input" placeholder="116" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Total Degree Credits</label>
+              <input type="number" id="edit-metric-totalcredits" class="form-input" placeholder="160" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Upcoming Exams Note</label>
+            <input type="text" id="edit-metric-examnote" class="form-input" placeholder="e.g. 3 Modules • Starts Oct 15, 2026">
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
+            <button type="button" class="btn btn-ghost" onclick="closeEditMetricsModal()">Cancel</button>
+            <button type="submit" class="btn btn-gold">Save Batch Metrics</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       EXPORT STUDENT ROSTER PDF MODAL (ADMIN - UNIVERSITY GRADE & AUTO-ADAPTIVE)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="export-roster-modal">
+    <div class="modal-box" style="max-width: 960px;">
+      <div class="modal-header" style="padding-bottom: 0.75rem;">
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <span style="font-size:1.6rem;">📊</span>
+          <div>
+            <h3 style="margin:0; font-size:1.3rem; font-weight:800; color:var(--navy-900);">Official Batch Student Roster — Office Studio</h3>
+            <p style="margin:0.15rem 0 0 0; font-size:0.82rem; color:var(--slate-500);">
+              Interactive MS Office-Grade Customizer • Dynamic Columns • Single-Row Guarantee
+            </p>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="closeExportRosterModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding-top: 0.5rem;">
+        <form id="export-roster-form" onsubmit="event.preventDefault();">
+
+          <!-- MS Office Tabbed Ribbon -->
+          <div class="office-customizer-wrapper">
+            <div class="office-tabs-nav">
+              <button type="button" class="office-tab-btn active" data-office-tab="layout" onclick="switchOfficeTab('layout')">
+                📐 Page & Theme
+              </button>
+              <button type="button" class="office-tab-btn" data-office-tab="columns" onclick="switchOfficeTab('columns')">
+                📊 6 Columns & Auto-Fit
+              </button>
+              <button type="button" class="office-tab-btn" data-office-tab="header" onclick="switchOfficeTab('header')">
+                🏛️ Header, Motto & Seal
+              </button>
+              <button type="button" class="office-tab-btn" data-office-tab="filter" onclick="switchOfficeTab('filter')">
+                🔢 Sort & Query
+              </button>
+            </div>
+
+            <!-- TAB 1: PAGE, TYPOGRAPHY & THEME -->
+            <div class="office-pane active" id="office-pane-layout">
+              <div class="office-control-grid">
+                <div class="office-control-group">
+                  <label>📄 Page Orientation</label>
+                  <select id="office-orientation" onchange="onOfficeConfigChange()">
+                    <option value="portrait" selected>Portrait (A4 - 182mm Grid)</option>
+                    <option value="landscape">Landscape (A4 - 269mm Wide Grid • Recommended for Single-Row)</option>
+                  </select>
+                </div>
+
+                <div class="office-control-group">
+                  <label>🔤 Body Font Size (pt)</label>
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <input type="number" id="office-font-size" min="6.0" max="10.0" step="0.2" value="7.5" style="width:70px; text-align:center;" onchange="onOfficeConfigChange()" oninput="onOfficeConfigChange()">
+                    <span style="font-size:0.75rem; color:#64748b;">(Auto-fits single row)</span>
+                  </div>
+                </div>
+
+                <div class="office-control-group">
+                  <label>🏷️ Header Font Size (pt)</label>
+                  <input type="number" id="office-header-size" min="7.0" max="11.0" step="0.2" value="8.5" style="width:70px; text-align:center;" onchange="onOfficeConfigChange()" oninput="onOfficeConfigChange()">
+                </div>
+
+                <div class="office-control-group">
+                  <label>🎨 Document Color Theme</label>
+                  <div class="office-theme-chips">
+                    <span class="office-theme-chip active" data-theme="navy" onclick="selectOfficeTheme('navy')">
+                      <span class="office-theme-dot" style="background:#0f172a;"></span> Deep Navy
+                    </span>
+                    <span class="office-theme-chip" data-theme="blue" onclick="selectOfficeTheme('blue')">
+                      <span class="office-theme-dot" style="background:#0369a1;"></span> Royal Blue
+                    </span>
+                    <span class="office-theme-chip" data-theme="slate" onclick="selectOfficeTheme('slate')">
+                      <span class="office-theme-dot" style="background:#334155;"></span> Executive Slate
+                    </span>
+                    <span class="office-theme-chip" data-theme="emerald" onclick="selectOfficeTheme('emerald')">
+                      <span class="office-theme-dot" style="background:#065f46;"></span> Emerald
+                    </span>
+                    <span class="office-theme-chip" data-theme="monochrome" onclick="selectOfficeTheme('monochrome')">
+                      <span class="office-theme-dot" style="background:#171717;"></span> Charcoal
+                    </span>
+                  </div>
+                </div>
+
+                <div class="office-control-group" style="grid-column: 1 / -1; display:flex; align-items:center; gap:1.5rem; margin-top:0.2rem;">
+                  <label style="margin:0; display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer;">
+                    <input type="checkbox" id="office-zebra" checked onchange="onOfficeConfigChange()" style="width:auto;">
+                    <span>Zebra Alternating Row Shading</span>
+                  </label>
+                  <label style="margin:0; display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer;">
+                    <input type="checkbox" id="office-compact-padding" onchange="onOfficeConfigChange()" style="width:auto;">
+                    <span>Ultra-Compact Cell Height</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2: 6 COLUMNS & AUTO-FIT CONTROLLER -->
+            <div class="office-pane" id="office-pane-columns">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
+                <label style="font-size:0.8rem; font-weight:700; color:#0f172a; display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer; margin:0;">
+                  <input type="checkbox" id="office-autofit" checked onchange="toggleAutoFit(this.checked)" style="width:auto;">
+                  <span>⚡ Auto-Fit Content Widths (Guaranteed Single Row, Zero Wrapping)</span>
+                </label>
+                <button type="button" class="btn btn-xs btn-outline-navy" onclick="resetColumnWidths()">
+                  ↺ Re-Balance Columns
+                </button>
+              </div>
+
+              <!-- 6 Column Cards -->
+              <div class="office-cols-grid">
+                <!-- Col 0: SL No -->
+                <div class="office-col-card">
+                  <span class="office-col-badge">Col 1</span>
+                  <input type="text" id="col-title-0" class="office-col-title-input" value="SL No." title="Column Header Title" oninput="onOfficeConfigChange()">
+                  <div class="office-col-stepper">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(0, -1)">−</button>
+                    <input type="number" id="col-width-0" class="office-col-width-input" value="8" min="5" max="30" onchange="onManualColWidthChange(0)" oninput="onManualColWidthChange(0)">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(0, 1)">+</button>
+                  </div>
+                  <span style="font-size:0.65rem; color:#64748b;">mm</span>
+                </div>
+
+                <!-- Col 1: Name -->
+                <div class="office-col-card">
+                  <span class="office-col-badge">Col 2</span>
+                  <input type="text" id="col-title-1" class="office-col-title-input" value="Name" title="Column Header Title" oninput="onOfficeConfigChange()">
+                  <div class="office-col-stepper">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(1, -1)">−</button>
+                    <input type="number" id="col-width-1" class="office-col-width-input" value="54" min="20" max="120" onchange="onManualColWidthChange(1)" oninput="onManualColWidthChange(1)">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(1, 1)">+</button>
+                  </div>
+                  <span style="font-size:0.65rem; color:#64748b;">mm</span>
+                </div>
+
+                <!-- Col 2: Student ID -->
+                <div class="office-col-card">
+                  <span class="office-col-badge">Col 3</span>
+                  <input type="text" id="col-title-2" class="office-col-title-input" value="Student ID" title="Column Header Title" oninput="onOfficeConfigChange()">
+                  <div class="office-col-stepper">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(2, -1)">−</button>
+                    <input type="number" id="col-width-2" class="office-col-width-input" value="20" min="12" max="60" onchange="onManualColWidthChange(2)" oninput="onManualColWidthChange(2)">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(2, 1)">+</button>
+                  </div>
+                  <span style="font-size:0.65rem; color:#64748b;">mm</span>
+                </div>
+
+                <!-- Col 3: Reg. No. -->
+                <div class="office-col-card">
+                  <span class="office-col-badge">Col 4</span>
+                  <input type="text" id="col-title-3" class="office-col-title-input" value="Reg. No." title="Column Header Title" oninput="onOfficeConfigChange()">
+                  <div class="office-col-stepper">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(3, -1)">−</button>
+                    <input type="number" id="col-width-3" class="office-col-width-input" value="25" min="15" max="60" onchange="onManualColWidthChange(3)" oninput="onManualColWidthChange(3)">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(3, 1)">+</button>
+                  </div>
+                  <span style="font-size:0.65rem; color:#64748b;">mm</span>
+                </div>
+
+                <!-- Col 4: Phone Number -->
+                <div class="office-col-card">
+                  <span class="office-col-badge">Col 5</span>
+                  <input type="text" id="col-title-4" class="office-col-title-input" value="Phone Number" title="Column Header Title" oninput="onOfficeConfigChange()">
+                  <div class="office-col-stepper">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(4, -1)">−</button>
+                    <input type="number" id="col-width-4" class="office-col-width-input" value="25" min="15" max="60" onchange="onManualColWidthChange(4)" oninput="onManualColWidthChange(4)">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(4, 1)">+</button>
+                  </div>
+                  <span style="font-size:0.65rem; color:#64748b;">mm</span>
+                </div>
+
+                <!-- Col 5: Valid Email -->
+                <div class="office-col-card">
+                  <span class="office-col-badge">Col 6</span>
+                  <input type="text" id="col-title-5" class="office-col-title-input" value="Valid Email" title="Column Header Title" oninput="onOfficeConfigChange()">
+                  <div class="office-col-stepper">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(5, -1)">−</button>
+                    <input type="number" id="col-width-5" class="office-col-width-input" value="50" min="25" max="120" onchange="onManualColWidthChange(5)" oninput="onManualColWidthChange(5)">
+                    <button type="button" class="office-step-btn" onclick="stepColWidth(5, 1)">+</button>
+                  </div>
+                  <span style="font-size:0.65rem; color:#64748b;">mm</span>
+                </div>
+              </div>
+
+              <!-- Total Width Meter -->
+              <div class="office-meter-bar">
+                <span>Total Width: <strong id="office-total-width-text">182 mm</strong> / Target: <span id="office-target-width-text">182 mm</span></span>
+                <span id="office-width-status-badge" style="font-size:0.75rem; font-weight:700; color:#16a34a; background:#dcfce7; padding:2px 8px; border-radius:4px;">
+                  ✓ Exact Fit
+                </span>
+              </div>
+            </div>
+
+            <!-- TAB 3: HEADER, MOTTO & CERTIFICATION SEAL -->
+            <div class="office-pane" id="office-pane-header">
+              <div class="office-control-grid">
+                <div class="office-control-group" style="grid-column: 1 / -1;">
+                  <label>🏛️ Institution & Department Banner Title</label>
+                  <input type="text" id="office-inst-title" value="DEPARTMENT OF PHYSICS • RAJSHAHI COLLEGE, RAJSHAHI" oninput="onOfficeConfigChange()">
+                </div>
+
+                <div class="office-control-group">
+                  <label>🎓 Batch & Session Subtitle</label>
+                  <input type="text" id="office-batch-subtitle" value="Paradox-147 — The 147th Honours Batch (Session 2024-25)" oninput="onOfficeConfigChange()">
+                </div>
+
+                <div class="office-control-group">
+                  <label>✨ Official Batch Motto</label>
+                  <input type="text" id="office-motto" value="• We Live • We Laugh • We Conquer •" oninput="onOfficeConfigChange()">
+                </div>
+
+                <div class="office-control-group">
+                  <label>✍️ Administrator / CR Signee Name</label>
+                  <input type="text" id="office-signee-name" value="MD. KHAIRUL ISLAM NAHID" oninput="onOfficeConfigChange()">
+                </div>
+
+                <div class="office-control-group">
+                  <label>📋 Signee Designation & Role</label>
+                  <input type="text" id="office-signee-role" value="Class Representative & Batch Admin" oninput="onOfficeConfigChange()">
+                </div>
+
+                <div class="office-control-group" style="grid-column: 1 / -1; display:flex; gap:1.5rem; margin-top:0.2rem;">
+                  <label style="margin:0; display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer;">
+                    <input type="checkbox" id="office-show-logos" checked onchange="onOfficeConfigChange()" style="width:auto;">
+                    <span>Embed Dual Logos (RC Emblem + Paradox Crest)</span>
+                  </label>
+                  <label style="margin:0; display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer;">
+                    <input type="checkbox" id="office-show-seal" checked onchange="onOfficeConfigChange()" style="width:auto;">
+                    <span>Include CR Certification Seal Block</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 4: SORTING & QUERY -->
+            <div class="office-pane" id="office-pane-filter">
+              <div class="office-control-grid">
+                <div class="office-control-group">
+                  <label>🔢 Sort Order</label>
+                  <select id="export-sort-by" onchange="onOfficeConfigChange()">
+                    <option value="roll-asc" selected>Student ID / Roll (Ascending: 1 ➔ 9)</option>
+                    <option value="roll-desc">Student ID / Roll (Descending: 9 ➔ 1)</option>
+                    <option value="reg-asc">Registration No. (Ascending: 1 ➔ 9)</option>
+                    <option value="reg-desc">Registration No. (Descending: 9 ➔ 1)</option>
+                    <option value="name-asc">Student Name (Alphabetical: A ➔ Z)</option>
+                  </select>
+                </div>
+
+                <div class="office-control-group">
+                  <label>🎓 Student Status Filter</label>
+                  <select id="export-status-filter" onchange="onOfficeConfigChange()">
+                    <option value="active" selected>Active & Verified Students Only</option>
+                    <option value="all">All Enrolled Students (Active + Pending)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- REAL-TIME LIVE DOCUMENT PREVIEW -->
+          <div style="margin-bottom:1rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; flex-wrap:wrap; gap:0.4rem;">
+              <span style="font-size:0.82rem; font-weight:700; color:#1e293b;">
+                👁️ Live Interactive Preview (<span id="export-preview-count" style="color:#0284c7; font-weight:800;">0</span> Students Selected):
+              </span>
+              <span id="office-preview-mode-badge" style="font-size:0.72rem; color:#64748b; font-weight:600; background:#f1f5f9; padding:2px 8px; border-radius:4px;">
+                Single-Row Strict • Portrait (182mm)
+              </span>
+            </div>
+
+            <!-- Top Banner Mini Preview -->
+            <div id="roster-preview-mini-banner" style="background:#0f172a; color:#ffffff; padding:10px 14px; border-radius:8px 8px 0 0; text-align:center; transition:background 0.2s;">
+              <div id="preview-banner-inst" style="font-size:11px; font-weight:800; letter-spacing:0.04em;">DEPARTMENT OF PHYSICS • RAJSHAHI COLLEGE, RAJSHAHI</div>
+              <div id="preview-banner-batch" style="font-size:9.5px; font-weight:700; color:#d4af37; margin-top:2px;">Paradox-147 — The 147th Honours Batch (Session 2024-25)</div>
+              <div id="preview-banner-motto" style="font-size:8px; color:#cbd5e1; font-style:italic; margin-top:1px;">• We Live • We Laugh • We Conquer •</div>
+            </div>
+
+            <!-- Table Preview Wrap with Single-Row Table -->
+            <div style="border:1px solid #cbd5e1; border-top:none; border-bottom:none; max-height:240px; overflow-x:auto; background:#ffffff;">
+              <table class="single-row-table" id="roster-live-preview-table">
+                <thead id="roster-live-preview-thead" style="background:#0f172a; color:#ffffff;"></thead>
+                <tbody id="roster-live-preview-tbody"></tbody>
+              </table>
+            </div>
+
+            <!-- Footer Mini Preview -->
+            <div id="roster-preview-mini-footer" style="display:flex; justify-content:space-between; align-items:center; font-size:9px; color:#64748b; padding:8px 12px; border:1px solid #cbd5e1; border-radius:0 0 8px 8px; background:#f8fafc;">
+              <span>Official Academic Registry • <span id="preview-footer-inst">Department of Physics, Rajshahi College</span></span>
+              <span>Certified & Sealed: <strong id="preview-footer-signee" style="color:#0f172a;">MD. KHAIRUL ISLAM NAHID</strong> (<span id="preview-footer-role">CR & Admin</span>)</span>
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+            <button type="button" class="btn btn-xs btn-ghost" onclick="resetToOfficeDefaults()" style="color:#64748b; font-weight:600;">
+              ↺ Reset to Office Defaults
+            </button>
+            <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
+              <button type="button" class="btn btn-ghost" onclick="closeExportRosterModal()">Cancel</button>
+              <button type="button" class="btn btn-outline-navy" onclick="printStudentRosterHTML()" style="display:inline-flex; align-items:center; gap:0.4rem; font-weight:700;">
+                🖨️ Print / Preview Roster
+              </button>
+              <button type="button" class="btn btn-gold" onclick="downloadStudentRosterPDF()" style="font-weight:800; display:inline-flex; align-items:center; gap:0.45rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Official PDF
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       EDIT GALLERY MEMORY MODAL FORM
+       ======================================================================== -->
+  <div class="modal-backdrop" id="edit-gallery-modal">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="margin: 0; color: var(--navy-900);">✏️ Edit Published Gallery Memory</h3>
+          <p style="margin: 0.2rem 0 0 0; font-size: 0.82rem; color: var(--slate-500);">
+            Update title, date, location, category, story, or manage photos (up to 50 pictures).
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="closeEditGalleryMemoryModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" style="max-height: 75vh; overflow-y: auto; padding-right: 0.5rem;">
+        <form id="edit-gallery-form">
+          <input type="hidden" id="edit-mem-id">
+
+          <!-- Memory Title -->
+          <div class="form-group">
+            <label class="form-label">Memory Heading / Title <span style="color:var(--danger-500);">*</span></label>
+            <input type="text" id="edit-mem-title" class="form-input" placeholder="e.g. Optics Lab Diffraction Experiment" required>
+          </div>
+
+          <div class="form-row">
+            <!-- Date -->
+            <div class="form-group">
+              <label class="form-label">Date of Event <span style="color:var(--danger-500);">*</span></label>
+              <input type="date" id="edit-mem-date" class="form-input" required>
+            </div>
+            <!-- Location -->
+            <div class="form-group">
+              <label class="form-label">Location / Spot <span style="color:var(--danger-500);">*</span></label>
+              <input type="text" id="edit-mem-location" class="form-input" placeholder="e.g. Physics Department Room 204" required>
+            </div>
+          </div>
+
+          <!-- Album Category -->
+          <div class="form-group">
+            <label class="form-label">Album Category</label>
+            <select id="edit-mem-category" class="form-select" onchange="handleEditMemCategoryChange(this)">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+
+          <!-- Custom Category Inline Input -->
+          <div class="form-group" id="edit-mem-custom-category-group" style="display: none;">
+            <label class="form-label">Custom Category Name <span style="color:var(--danger-500);">*</span></label>
+            <input type="text" id="edit-mem-custom-category" class="form-input" placeholder="e.g. Saint Martin Tour, Physics Cricket Cup, Farewell...">
+          </div>
+
+          <!-- Photographs Management (Up to 50 Photos) -->
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label class="form-label" style="margin: 0;">
+                Photographs (<span id="edit-mem-photo-count" style="font-weight: 700; color: var(--navy-900);">0</span> / 50 selected) <span style="color:var(--danger-500);">*</span>
+              </label>
+              <div style="display: flex; gap: 0.4rem;">
+                <button type="button" class="btn btn-xs btn-outline-navy" onclick="document.getElementById('edit-mem-file-input').click();">
+                  + Add Photos
+                </button>
+                <button type="button" class="btn btn-xs btn-outline-danger" onclick="clearAllEditMemoryImages()">
+                  Clear All
+                </button>
+              </div>
+            </div>
+
+            <input type="file" id="edit-mem-file-input" multiple accept="image/png, image/jpeg, image/jpg, image/webp" style="display: none;">
+
+            <div id="edit-mem-upload-progress" style="display: none; padding: 0.5rem; font-size: 0.82rem; color: var(--gold-600); font-weight: 600; text-align: center;">
+              ⏳ Optimizing images...
+            </div>
+
+            <div style="background: var(--navy-50); border: 1px solid var(--slate-300); border-radius: var(--radius-sm); padding: 0.75rem;">
+              <div id="edit-mem-preview-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 0.5rem; max-height: 180px; overflow-y: auto; padding: 0.35rem; background: var(--white); border-radius: var(--radius-sm); border: 1px solid var(--slate-200);">
+              </div>
+              <div style="font-size: 0.75rem; color: var(--slate-500); margin-top: 0.5rem; display: flex; justify-content: space-between;">
+                <span>Click ✕ on any photo thumbnail to remove it.</span>
+                <span id="edit-mem-preview-summary" style="font-weight: 600; color: var(--navy-800);"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Story / Details -->
+          <div class="form-group">
+            <label class="form-label">Story / Details</label>
+            <textarea id="edit-mem-details" rows="3" class="form-textarea" placeholder="Update memory story or funny incident..."></textarea>
+          </div>
+
+          <!-- Others Info -->
+          <div class="form-group">
+            <label class="form-label">Others Info / Batchmates Present</label>
+            <input type="text" id="edit-mem-others" class="form-input" placeholder="e.g. Sakib, Tanvir, Nahid, Dr. Rafiq Sir">
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+            <button type="submit" id="edit-mem-submit-btn" class="btn btn-navy" style="flex: 1; font-weight: 700;">
+              Save & Update Memory 💾
+            </button>
+            <button type="button" class="btn btn-outline-navy" onclick="closeEditGalleryMemoryModal()">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       NOTIFICATION DETAIL & READER MODAL
+       ======================================================================== -->
+  <div class="modal-backdrop" id="notification-detail-modal">
+    <div class="modal-box" style="max-width: 580px;">
+      <div class="modal-header" style="border-bottom: 1px solid var(--slate-200); padding-bottom: 0.85rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span id="notif-modal-icon" style="font-size: 1.4rem;">🔔</span>
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.45rem;">
+              <span id="notif-modal-category-badge" class="badge badge-navy" style="font-size: 0.68rem;">Category</span>
+              <span id="notif-modal-status-badge" class="badge badge-gold" style="font-size: 0.68rem;">Unread</span>
+            </div>
+            <h3 id="notif-modal-title" style="margin: 0.2rem 0 0 0; font-size: 1.15rem; color: var(--navy-900);">Notification Title</h3>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="closeNotificationModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.25rem; max-height: 65vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px dashed var(--slate-200); font-size: 0.78rem; color: var(--slate-500); flex-wrap: wrap; gap: 0.35rem;">
+          <span><strong>Received:</strong> <span id="notif-modal-time">—</span></span>
+          <span id="notif-modal-id" style="font-family: monospace; font-size: 0.72rem; color: var(--slate-400);">ID: —</span>
+        </div>
+
+        <!-- Dynamic Content Section -->
+        <div id="notif-modal-content-area">
+          <!-- Populated by js/dashboard.js -->
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; padding: 0.85rem 1.25rem; background: var(--slate-50); border-top: 1px solid var(--slate-200);">
+        <div style="display: flex; gap: 0.45rem;" id="notif-modal-left-actions">
+          <button type="button" class="btn btn-sm btn-outline-danger" id="notif-modal-delete-btn" onclick="handleModalDeleteNotification()">
+            🗑️ Delete
+          </button>
+          <button type="button" class="btn btn-sm btn-outline" id="notif-modal-toggle-read-btn" onclick="handleModalToggleReadNotification()">
+            ✓ Mark Read
+          </button>
+        </div>
+        <div style="display: flex; gap: 0.45rem;" id="notif-modal-right-actions">
+          <button type="button" class="btn btn-sm btn-navy" onclick="closeNotificationModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/brand-assets.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/email-service.js"></script>
+  <script src="js/directory.js"></script>
+  <script src="js/main.js"></script>
+  <!-- PDF Generation Vendor Libraries -->
+  <script src="js/vendor/jspdf.umd.min.js"></script>
+  <script src="js/vendor/jspdf.plugin.autotable.min.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script>
+    // Initialize Add Student Modal Form listener
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.setupAddStudentForm) window.setupAddStudentForm();
+    });
+  </script>
+</body>
+</html>

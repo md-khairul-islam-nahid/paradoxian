@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "project": "Paradox-147 Portal",
+  "mode": "interactive",
+  "workflows": {
+    "auto_verify": true,
+    "strict_privacy": true,
+    "dual_mode_api": true
+  },
+  "created": "2026-09-13T03:15:00.000Z"
+}

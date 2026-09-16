@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#070F1E"/>
+      <stop offset="60%" stop-color="#0A192F"/>
+      <stop offset="100%" stop-color="#102A45"/>
+    </linearGradient>
+    <linearGradient id="goldGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#F3D067" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="buildingGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#163254" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#0A192F" stop-opacity="0.95"/>
+    </linearGradient>
+    <linearGradient id="buildingGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1D406B" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0D223D" stop-opacity="0.98"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Background -->
+  <rect width="1920" height="1080" fill="url(#skyGrad)"/>
+
+  <!-- Celestial Glow / Ambience -->
+  <circle cx="1500" cy="240" r="380" fill="url(#goldGlow)"/>
+  <circle cx="320" cy="850" r="420" fill="#800020" fill-opacity="0.12"/>
+
+  <!-- Distant Architectural Silhouette (Academic Campus Domes & Towers) -->
+  <g opacity="0.35">
+    <polygon points="120,800 120,620 180,560 240,620 240,800" fill="#132B47"/>
+    <rect x="230" y="660" width="160" height="140" fill="#132B47"/>
+    <polygon points="310,660 310,600 390,660" fill="#132B47"/>
+    <rect x="520" y="600" width="220" height="200" fill="#132B47"/>
+    <path d="M 630 600 Q 630 500 680 500 Q 730 500 730 600 Z" fill="#132B47"/>
+    
+    <!-- Clock Tower Silhouette -->
+    <rect x="920" y="440" width="110" height="360" fill="#183659"/>
+    <polygon points="900,440 975,340 1050,440" fill="#1E446F"/>
+    <circle cx="975" cy="490" r="22" fill="#D4AF37" fill-opacity="0.6"/>
+
+    <rect x="1250" y="580" width="260" height="220" fill="#132B47"/>
+    <path d="M 1340 580 Q 1380 480 1420 580 Z" fill="#132B47"/>
+    <rect x="1600" y="640" width="220" height="160" fill="#132B47"/>
+  </g>
+
+  <!-- Midground Campus Buildings (Colonnades & Department Quadrangle) -->
+  <g opacity="0.75">
+    <!-- Academic Complex Left -->
+    <rect x="0" y="720" width="480" height="360" fill="url(#buildingGrad1)"/>
+    <g fill="#D4AF37" fill-opacity="0.3">
+      <rect x="40" y="760" width="25" height="45" rx="3"/>
+      <rect x="90" y="760" width="25" height="45" rx="3"/>
+      <rect x="140" y="760" width="25" height="45" rx="3"/>
+      <rect x="190" y="760" width="25" height="45" rx="3"/>
+      <rect x="240" y="760" width="25" height="45" rx="3"/>
+      <rect x="290" y="760" width="25" height="45" rx="3"/>
+      <rect x="340" y="760" width="25" height="45" rx="3"/>
+      <rect x="390" y="760" width="25" height="45" rx="3"/>
+
+      <rect x="40" y="830" width="25" height="45" rx="3"/>
+      <rect x="90" y="830" width="25" height="45" rx="3"/>
+      <rect x="140" y="830" width="25" height="45" rx="3"/>
+      <rect x="190" y="830" width="25" height="45" rx="3"/>
+      <rect x="240" y="830" width="25" height="45" rx="3"/>
+      <rect x="290" y="830" width="25" height="45" rx="3"/>
+      <rect x="340" y="830" width="25" height="45" rx="3"/>
+      <rect x="390" y="830" width="25" height="45" rx="3"/>
+    </g>
+
+    <!-- Main Faculty Auditorium & Portal -->
+    <rect x="680" y="680" width="620" height="400" fill="url(#buildingGrad2)"/>
+    <!-- Grand Pediment -->
+    <polygon points="660,680 990,560 1320,680" fill="#1B3E68"/>
+    <!-- Pillars / Colonnade -->
+    <g fill="#0A192F">
+      <rect x="730" y="680" width="22" height="240"/>
+      <rect x="800" y="680" width="22" height="240"/>
+      <rect x="870" y="680" width="22" height="240"/>
+      <rect x="940" y="680" width="22" height="240"/>
+      <rect x="1010" y="680" width="22" height="240"/>
+      <rect x="1080" y="680" width="22" height="240"/>
+      <rect x="1150" y="680" width="22" height="240"/>
+      <rect x="1220" y="680" width="22" height="240"/>
+    </g>
+
+    <!-- Right Wing Laboratories -->
+    <rect x="1460" y="700" width="460" height="380" fill="url(#buildingGrad1)"/>
+    <g fill="#D4AF37" fill-opacity="0.25">
+      <rect x="1500" y="740" width="30" height="50" rx="3"/>
+      <rect x="1560" y="740" width="30" height="50" rx="3"/>
+      <rect x="1620" y="740" width="30" height="50" rx="3"/>
+      <rect x="1680" y="740" width="30" height="50" rx="3"/>
+      <rect x="1740" y="740" width="30" height="50" rx="3"/>
+      <rect x="1800" y="740" width="30" height="50" rx="3"/>
+    </g>
+  </g>
+
+  <!-- Campus Trees & Foliage Silhouette (Foreground) -->
+  <g fill="#060C17" opacity="0.95">
+    <!-- Paris Road Foliage & Palm Trees -->
+    <circle cx="580" cy="900" r="110"/>
+    <circle cx="510" cy="920" r="90"/>
+    <circle cx="640" cy="910" r="95"/>
+    <circle cx="1380" cy="890" r="120"/>
+    <circle cx="1450" cy="920" r="100"/>
+    <circle cx="1320" cy="930" r="85"/>
+  </g>
+
+  <!-- Ground Plane Quadrangle -->
+  <rect x="0" y="960" width="1920" height="120" fill="#050A14"/>
+  <line x1="0" y1="960" x2="1920" y2="960" stroke="#D4AF37" stroke-width="1.5" stroke-opacity="0.4"/>
+</svg>

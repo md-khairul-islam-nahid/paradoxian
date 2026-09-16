@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Directory | Paradox-147 (Physics, Rajshahi College)</title>
+  <meta name="description" content="Searchable student directory for Paradox-147 — The 147th Honours Batch (2024-25 Session), Department of Physics, Rajshahi College. Filter by blood group, district, or roll.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/batch-logo.png">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Directory specific styling */
+    .filter-bar {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+    }
+    .blood-filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+    }
+    .blood-filter-btn {
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--slate-100);
+      color: var(--slate-700);
+      border: 1px solid var(--slate-200);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .blood-filter-btn:hover {
+      background: var(--slate-200);
+    }
+    .blood-filter-btn.active {
+      background: var(--maroon-700);
+      color: var(--white);
+      border-color: var(--maroon-700);
+      box-shadow: 0 2px 8px rgba(128, 0, 32, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       GLOBAL NAVBAR
+       ======================================================================== -->
+  <header class="navbar" id="main-navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="assets/images/batch-logo.png" alt="PARADOX-147 Crest" class="brand-crest-img">
+        <div class="brand-info">
+          <span class="brand-name">PARADOX-147</span>
+          <span class="brand-sub">Dept. of Physics • Rajshahi College</span>
+        </div>
+      </a>
+
+      <nav class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="students.html" class="nav-link active">Students</a>
+        <a href="gallery.html" class="nav-link">Gallery</a>
+        <a href="notices.html" class="nav-link">Notices</a>
+        <a href="index.html#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div id="nav-auth-container">
+          <a href="login.html" class="btn btn-sm btn-outline-gold">Portal Login</a>
+        </div>
+        <button class="hamburger-btn" aria-label="Toggle navigation menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================
+         DIRECTORY HEADER BANNER
+         ======================================================================== -->
+    <section class="section-sm section-bg-navy" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+      <div class="container">
+        <div class="official-header-banner" style="margin-bottom: 0;">
+          <img src="assets/images/rc-logo.png" alt="Rajshahi College" class="official-banner-logo" title="Rajshahi College (Est. 1873)">
+          <div class="official-banner-center">
+            <div class="official-banner-title">Department of Physics • Rajshahi College, Rajshahi</div>
+            <div class="official-banner-batch">Paradox-147 — The 147th Honours Batch (Session 2024-25)</div>
+            <div class="official-banner-tagline">• We Live • We Laugh • We Conquer •</div>
+            <h1 id="students-page-title" style="color: var(--white); font-size: clamp(1.4rem, 3vw, 1.85rem); margin: 0.5rem 0 0.25rem 0; font-weight: 800;">
+              Batchmates & Student Directory
+            </h1>
+            <p id="students-page-subtitle" style="color: var(--slate-300); max-width: 680px; margin: 0 auto; font-size: 0.88rem;">
+              Connect with fellow students of Paradox-147. Public view displays verified student names, home district, photo, and official contact emails.
+            </p>
+          </div>
+          <img src="assets/images/batch-logo.png" alt="Paradox-147" class="official-banner-logo" title="Paradox-147 Official Batch Crest">
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         FILTER & SEARCH CONTROLS
+         ======================================================================== -->
+    <section class="section" style="padding-top: 2.5rem;">
+      <div class="container">
+        <div class="filter-bar">
+          <!-- Row 1: Search Input & Dropdowns -->
+          <div style="display: grid; grid-template-columns: 2fr 1.2fr 1fr auto; gap: 1rem; margin-bottom: 1.25rem; align-items: center;" class="filter-row-top">
+            <div style="position: relative;">
+              <input type="text" id="directory-search-input" class="form-input" placeholder="Search by name, roll number, district, or skill (e.g. Python)..." style="padding-left: 2.5rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--slate-400);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+
+            <div>
+              <select id="directory-district-select" class="form-select">
+                <option value="All">All Districts</option>
+              </select>
+            </div>
+
+            <div>
+              <select id="directory-sort-select" class="form-select">
+                <option value="roll-asc">Sort: Roll (Asc)</option>
+                <option value="roll-desc">Sort: Roll (Desc)</option>
+                <option value="name-asc">Sort: Name (A-Z)</option>
+                <option value="name-desc">Sort: Name (Z-A)</option>
+              </select>
+            </div>
+
+            <div>
+              <button id="directory-clear-filters" class="btn btn-sm btn-ghost" title="Reset all filters">
+                Clear Filters
+              </button>
+            </div>
+          </div>
+
+          <!-- Row 2: Blood Group Quick Filter Chips -->
+          <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; padding-top: 1rem; border-top: 1px solid var(--slate-100);">
+            <span style="font-size: 0.84rem; font-weight: 700; color: var(--slate-700); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.35rem;">
+              🩸 Blood Group:
+            </span>
+            <div class="blood-filter-group">
+              <button class="blood-filter-btn active" data-blood="All">All</button>
+              <button class="blood-filter-btn" data-blood="A+">A+</button>
+              <button class="blood-filter-btn" data-blood="A-">A-</button>
+              <button class="blood-filter-btn" data-blood="B+">B+</button>
+              <button class="blood-filter-btn" data-blood="B-">B-</button>
+              <button class="blood-filter-btn" data-blood="O+">O+</button>
+              <button class="blood-filter-btn" data-blood="O-">O-</button>
+              <button class="blood-filter-btn" data-blood="AB+">AB+</button>
+              <button class="blood-filter-btn" data-blood="AB-">AB-</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Privacy / Auth Status Banner -->
+        <div id="directory-auth-banner"></div>
+
+        <!-- ====================================================================
+             STUDENT CARDS GRID
+             ==================================================================== -->
+        <div id="student-cards-container" class="grid grid-cols-3">
+          <!-- Filled dynamically by directory.js -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       STUDENT DETAILS MODAL
+       ======================================================================== -->
+  <div class="modal-backdrop" id="student-detail-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-student-name">Student Profile</h3>
+        <button class="modal-close-btn" onclick="closeStudentModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: flex; gap: 1.5rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <img id="modal-student-avatar" src="" alt="Avatar" style="width: 84px; height: 84px; border-radius: 50%; object-fit: cover; border: 3px solid var(--gold-500); box-shadow: var(--shadow-md);">
+          <div>
+            <div id="modal-student-role" class="badge badge-gold" style="margin-bottom: 0.35rem;">Batch Member</div>
+            <div id="modal-student-roll" style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: var(--slate-700);">Roll: ••••••••</div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.4rem; align-items: center; flex-wrap: wrap;">
+              <span id="modal-student-blood-container" class="badge badge-blood" title="Blood Group">Blood: <strong id="modal-student-blood">O+</strong></span>
+              <span class="badge badge-navy" title="District">📍 <span id="modal-student-district">Rajshahi</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Locked academic notice for public visitors -->
+        <div id="modal-academic-lock" class="modal-locked-section" style="display:none; margin-bottom:1.5rem;">
+          <div style="font-size:1.6rem; margin-bottom:0.35rem;">🔒</div>
+          <div style="font-weight:700; color:var(--navy-900); font-size:1rem; margin-bottom:0.35rem;">
+            Academic & Medical Data Restricted
+          </div>
+          <p style="font-size:0.84rem; color:var(--slate-600); max-width:400px; margin:0 auto 0.85rem auto; line-height:1.4;">
+            Roll numbers, registration IDs, blood group donor status, and academic transcripts are restricted to verified students of Paradox-147.
+          </p>
+          <a href="login.html" class="btn btn-sm btn-gold">Student Portal Login ↗</a>
+        </div>
+
+        <div id="modal-bio-container" style="margin-bottom: 1.25rem;">
+          <h4 style="font-size: 0.9rem; text-transform: uppercase; color: var(--slate-500); letter-spacing: 0.05em; margin-bottom: 0.35rem;">
+            About / Bio
+          </h4>
+          <p id="modal-student-bio" style="font-size: 0.92rem; color: var(--slate-700); line-height: 1.6;"></p>
+        </div>
+
+        <div id="modal-skills-container" style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 0.9rem; text-transform: uppercase; color: var(--slate-500); letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+            Skills & Technical Focus
+          </h4>
+          <div id="modal-student-skills" style="display: flex; flex-wrap: wrap; gap: 0.5rem;"></div>
+        </div>
+
+        <div style="background: var(--slate-50); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--slate-200);">
+          <h4 style="font-size: 0.9rem; text-transform: uppercase; color: var(--slate-500); letter-spacing: 0.05em; margin-bottom: 0.75rem;">
+            Contact Channels
+          </h4>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+            <div>
+              <strong>Email:</strong> <a id="modal-student-email" href="#" style="color: var(--navy-700);"></a>
+            </div>
+            <div id="modal-phone-container">
+              <strong>Phone / WhatsApp:</strong> <a id="modal-student-phone" href="#" style="color: var(--navy-700);"></a>
+              <span id="modal-phone-hidden-badge" style="display:none; color:var(--slate-400); font-style:italic;">[Hidden by student preference]</span>
+            </div>
+            <div id="modal-socials-container" style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              <!-- Dynamically populated with Portfolio, GitHub, LinkedIn, Facebook, Instagram, Threads, YouTube -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-sm btn-ghost" onclick="closeStudentModal()">Close Window</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       GLOBAL FOOTER
+       ======================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border: none; padding-top: 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.25rem;">
+        <div>© 2024–2025 Paradox-147, Department of Physics, Rajshahi College. • Official Email: <a href="mailto:mail.paradox147@gmail.com" style="color:var(--gold-400); font-weight:600;">mail.paradox147@gmail.com</a></div>
+        <div class="developer-credit">
+          <span>Developed by</span>
+          <a href="https://nahid.page.gd" target="_blank" rel="noopener noreferrer" class="developer-portfolio-link" title="Visit Portfolio of MD. KHAIRUL ISLAM NAHID (https://nahid.page.gd)">
+            <span>MD. KHAIRUL ISLAM NAHID</span>
+            <svg class="dev-link-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+        </div>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="index.html">Home</a>
+          <a href="notices.html">Notices</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/directory.js"></script>
+</body>
+</html>
