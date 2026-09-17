@@ -112,7 +112,14 @@ if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-function getAdminsList() {
+// Database Connection Manager
+const { connectDB, isConnected, Student, Admin, AdminRequest } = require('./db');
+
+/* --------------------------------------------------------------------------
+   HYBRID DATA LAYER (MongoDB Atlas Cloud with Local JSON Fallback)
+   -------------------------------------------------------------------------- */
+
+function getLocalAdminsList() {
   let admins = [];
   if (fs.existsSync(ADMINS_FILE)) {
     try {
@@ -146,7 +153,7 @@ function getAdminsList() {
       password: '@NAHID_KHAN_2024227170'
     };
     admins.unshift(superAdmin);
-    saveAdminsList(admins);
+    saveLocalAdminsList(admins);
   } else {
     let changed = false;
     if (superAdmin.isSuperAdmin !== true) { superAdmin.isSuperAdmin = true; changed = true; }
@@ -154,14 +161,14 @@ function getAdminsList() {
     if (superAdmin.status !== 'Active') { superAdmin.status = 'Active'; changed = true; }
     if (!superAdmin.role || superAdmin.role === 'admin' || superAdmin.role === 'Super Admin') { superAdmin.role = 'CR & Administrator'; changed = true; }
     if (changed) {
-      saveAdminsList(admins);
+      saveLocalAdminsList(admins);
     }
   }
 
   return admins;
 }
 
-function saveAdminsList(admins) {
+function saveLocalAdminsList(admins) {
   try {
     fs.writeFileSync(ADMINS_FILE, JSON.stringify(admins, null, 2), 'utf8');
   } catch (err) {
@@ -169,7 +176,58 @@ function saveAdminsList(admins) {
   }
 }
 
-function getAdminRequestsList() {
+async function getAdminsList() {
+  if (isConnected()) {
+    try {
+      let admins = await Admin.find({}).lean();
+      if (admins && admins.length > 0) {
+        let superAdmin = admins.find(a => 
+          (a.email && a.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) || 
+          a.roll === '2024227170' || 
+          a.id === 'admin-101'
+        );
+        if (!superAdmin) {
+          superAdmin = {
+            id: 'admin-101',
+            studentId: 'std-101',
+            roll: '2024227170',
+            name: 'MD. KHAIRUL ISLAM NAHID',
+            email: SUPER_ADMIN_EMAIL,
+            phone: '+8801859445559',
+            role: 'CR & Administrator',
+            isSuperAdmin: true,
+            isAdmin: true,
+            status: 'Active',
+            addedAt: '2024-01-01T00:00:00.000Z',
+            password: '@NAHID_KHAN_2024227170'
+          };
+          await Admin.create(superAdmin);
+          admins.unshift(superAdmin);
+        }
+        return admins;
+      }
+    } catch (err) {
+      console.error('[Database] Failed to read admins from MongoDB, falling back to local JSON:', err.message);
+    }
+  }
+  return getLocalAdminsList();
+}
+
+async function saveAdminsList(admins) {
+  saveLocalAdminsList(admins);
+  if (isConnected()) {
+    try {
+      for (const a of admins) {
+        const query = a.email ? { email: a.email.toLowerCase() } : { roll: a.roll };
+        await Admin.findOneAndUpdate(query, a, { upsert: true, returnDocument: 'after' });
+      }
+    } catch (err) {
+      console.error('[Database] Failed to sync admins to MongoDB:', err.message);
+    }
+  }
+}
+
+function getLocalAdminRequestsList() {
   if (fs.existsSync(ADMIN_REQUESTS_FILE)) {
     try {
       const data = JSON.parse(fs.readFileSync(ADMIN_REQUESTS_FILE, 'utf8'));
@@ -181,7 +239,7 @@ function getAdminRequestsList() {
   return [];
 }
 
-function saveAdminRequestsList(requests) {
+function saveLocalAdminRequestsList(requests) {
   try {
     fs.writeFileSync(ADMIN_REQUESTS_FILE, JSON.stringify(requests, null, 2), 'utf8');
   } catch (err) {
@@ -189,8 +247,34 @@ function saveAdminRequestsList(requests) {
   }
 }
 
-// Initialize student store from js/data.js if not yet present
-function getStudentsList() {
+async function getAdminRequestsList() {
+  if (isConnected()) {
+    try {
+      const reqs = await AdminRequest.find({}).sort({ createdAt: -1 }).lean();
+      if (reqs && reqs.length > 0) return reqs;
+    } catch (err) {
+      console.error('[Database] Failed to read admin requests from MongoDB, falling back to local JSON:', err.message);
+    }
+  }
+  return getLocalAdminRequestsList();
+}
+
+async function saveAdminRequestsList(requests) {
+  saveLocalAdminRequestsList(requests);
+  if (isConnected()) {
+    try {
+      for (const r of requests) {
+        if (r.id) {
+          await AdminRequest.findOneAndUpdate({ id: r.id }, r, { upsert: true, returnDocument: 'after' });
+        }
+      }
+    } catch (err) {
+      console.error('[Database] Failed to sync admin requests to MongoDB:', err.message);
+    }
+  }
+}
+
+function getLocalStudentsList() {
   let students = [];
   if (fs.existsSync(STUDENTS_FILE)) {
     try {
@@ -202,7 +286,6 @@ function getStudentsList() {
   }
 
   if (students.length === 0) {
-    // Load from js/data.js
     const dataJsPath = path.join(__dirname, '..', 'js', 'data.js');
     if (fs.existsSync(dataJsPath)) {
       try {
@@ -234,18 +317,62 @@ function getStudentsList() {
     if (!nahid.dobOriginal) { nahid.dobOriginal = '2005-08-14'; changed = true; }
     if (!nahid.dobCertificate) { nahid.dobCertificate = '2006-02-10'; changed = true; }
     if (changed) {
-      saveStudentsList(students);
+      saveLocalStudentsList(students);
     }
   }
 
   return students;
 }
 
-function saveStudentsList(students) {
+function saveLocalStudentsList(students) {
   try {
     fs.writeFileSync(STUDENTS_FILE, JSON.stringify(students, null, 2), 'utf8');
   } catch (err) {
     console.error('Error writing students file:', err.message);
+  }
+}
+
+async function getStudentsList() {
+  if (isConnected()) {
+    try {
+      let students = await Student.find({}).lean();
+      if (students && students.length > 0) {
+        // Enforce Super Admin Nahid
+        const nahid = students.find(s => 
+          s.id === 'std-101' || 
+          s.roll === '2024227170' || 
+          (s.email && s.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase())
+        );
+        if (nahid) {
+          if (!nahid.isAdmin || !nahid.isSuperAdmin) {
+            nahid.isAdmin = true;
+            nahid.isSuperAdmin = true;
+            await Student.updateOne(
+              { _id: nahid._id },
+              { $set: { isAdmin: true, isSuperAdmin: true } }
+            );
+          }
+        }
+        return students;
+      }
+    } catch (err) {
+      console.error('[Database] Failed to read students from MongoDB, falling back to local JSON:', err.message);
+    }
+  }
+  return getLocalStudentsList();
+}
+
+async function saveStudentsList(students) {
+  saveLocalStudentsList(students);
+  if (isConnected()) {
+    try {
+      for (const s of students) {
+        const query = s.roll ? { roll: s.roll } : { email: s.email };
+        await Student.findOneAndUpdate(query, s, { upsert: true, returnDocument: 'after' });
+      }
+    } catch (err) {
+      console.error('[Database] Failed to sync students to MongoDB:', err.message);
+    }
   }
 }
 
@@ -265,6 +392,7 @@ app.get('/api/health', (req, res) => {
     service: 'Paradox-147 Portal Backend',
     department: 'Department of Physics, Rajshahi College',
     officialEmail: OFFICIAL_EMAIL,
+    database: isConnected() ? 'MongoDB Atlas (Connected)' : 'Local JSON Data Store (Fallback)',
     timestamp: new Date().toISOString()
   });
 });
@@ -282,7 +410,7 @@ app.post('/api/auth/forgot-password/send-otp', async (req, res) => {
       });
     }
 
-    const students = getStudentsList();
+    const students = await getStudentsList();
     let student = students.find(s =>
       (s.email && s.email.toLowerCase() === cleanId) ||
       (s.roll && s.roll.toLowerCase() === cleanId) ||
@@ -475,7 +603,7 @@ app.post('/api/auth/forgot-password/reset-password', async (req, res) => {
       });
     }
 
-    const students = getStudentsList();
+    const students = await getStudentsList();
     let student = students.find(s => s.email && s.email.toLowerCase() === cleanEmail);
 
     if (!student) {
@@ -492,10 +620,10 @@ app.post('/api/auth/forgot-password/reset-password', async (req, res) => {
     student.password = cleanPass;
     student.passwordUpdatedAt = new Date().toISOString();
     student.passwordResetVia = OFFICIAL_EMAIL;
-    saveStudentsList(students);
+    await saveStudentsList(students);
 
     // DUAL-ACCOUNT PASSWORD SYNC: Also update linked Admin / Super Admin account
-    const admins = getAdminsList();
+    const admins = await getAdminsList();
     const linkedAdmin = admins.find(a => 
       (a.email && a.email.toLowerCase() === cleanEmail) || 
       (student.roll && a.roll && a.roll === student.roll)
@@ -503,7 +631,7 @@ app.post('/api/auth/forgot-password/reset-password', async (req, res) => {
     if (linkedAdmin) {
       linkedAdmin.password = cleanPass;
       linkedAdmin.passwordUpdatedAt = new Date().toISOString();
-      saveAdminsList(admins);
+      await saveAdminsList(admins);
       console.log(`[Sync] Updated password for linked Admin account: ${linkedAdmin.email} (${linkedAdmin.role})`);
     }
 
@@ -572,7 +700,7 @@ app.post('/api/auth/signup/send-otp', async (req, res) => {
     }
 
     // Check if roll or email is already registered and active
-    const students = getStudentsList();
+    const students = await getStudentsList();
     const existingRoll = students.find(s => s.roll && s.roll.trim() === cleanRoll);
     if (existingRoll) {
       const st = existingRoll.status === 'Pending' ? 'Pending Approval' : 'Active';
@@ -733,10 +861,10 @@ app.post('/api/auth/signup/verify-otp', (req, res) => {
    -------------------------------------------------------------------------- */
 
 // 5. Get current Admins and Pending Nominations
-app.get('/api/admin/list', (req, res) => {
+app.get('/api/admin/list', async (req, res) => {
   try {
-    const admins = getAdminsList();
-    const requests = getAdminRequestsList();
+    const admins = await getAdminsList();
+    const requests = await getAdminRequestsList();
     // Security: Sanitize admin entries to strictly omit passwords from network transmission
     const sanitizedAdmins = admins.map(a => {
       const { password, ...safeAdmin } = a;
@@ -754,7 +882,7 @@ app.get('/api/admin/list', (req, res) => {
 });
 
 // 6. Nominate Student to Become Admin (Requires Super Admin Approval)
-app.post('/api/admin/nominate', (req, res) => {
+app.post('/api/admin/nominate', async (req, res) => {
   try {
     const { studentId, roll, name, email, nominatedBy, note } = req.body;
     const cleanEmail = (email || '').trim().toLowerCase();
@@ -764,7 +892,7 @@ app.post('/api/admin/nominate', (req, res) => {
       return res.status(400).json({ success: false, message: 'Student roll or email is required.' });
     }
 
-    const admins = getAdminsList();
+    const admins = await getAdminsList();
     const isAlreadyAdmin = admins.some(a => 
       (a.email && a.email.toLowerCase() === cleanEmail) || 
       (cleanRoll && a.roll === cleanRoll)
@@ -773,7 +901,7 @@ app.post('/api/admin/nominate', (req, res) => {
       return res.status(400).json({ success: false, message: 'Student is already an authorized Administrator.' });
     }
 
-    const requests = getAdminRequestsList();
+    const requests = await getAdminRequestsList();
     const existingPending = requests.find(r => 
       r.status === 'Pending Super Admin Approval' && 
       ((r.email && r.email.toLowerCase() === cleanEmail) || (cleanRoll && r.roll === cleanRoll))
@@ -795,7 +923,7 @@ app.post('/api/admin/nominate', (req, res) => {
     };
 
     requests.unshift(newRequest);
-    saveAdminRequestsList(requests);
+    await saveAdminRequestsList(requests);
 
     res.json({
       success: true,
@@ -808,7 +936,7 @@ app.post('/api/admin/nominate', (req, res) => {
 });
 
 // 7. Super Admin Approves Admin Nomination
-app.post('/api/admin/approve-nomination', (req, res) => {
+app.post('/api/admin/approve-nomination', async (req, res) => {
   try {
     const { requestId, approverEmail, superAdminEmail } = req.body;
     const cleanApprover = (approverEmail || superAdminEmail || '').trim().toLowerCase();
@@ -820,7 +948,7 @@ app.post('/api/admin/approve-nomination', (req, res) => {
       });
     }
 
-    const requests = getAdminRequestsList();
+    const requests = await getAdminRequestsList();
     const request = requests.find(r => r.id === requestId);
     if (!request) {
       return res.status(404).json({ success: false, message: 'Nomination request not found.' });
@@ -833,10 +961,10 @@ app.post('/api/admin/approve-nomination', (req, res) => {
     request.status = 'Approved';
     request.approvedAt = new Date().toISOString();
     request.approvedBy = SUPER_ADMIN_EMAIL;
-    saveAdminRequestsList(requests);
+    await saveAdminRequestsList(requests);
 
     // Update students list
-    const students = getStudentsList();
+    const students = await getStudentsList();
     const student = students.find(s => 
       (request.email && s.email && s.email.toLowerCase() === request.email.toLowerCase()) ||
       (request.roll && s.roll === request.roll)
@@ -847,11 +975,11 @@ app.post('/api/admin/approve-nomination', (req, res) => {
       if (!student.role || student.role === 'Member' || student.role === 'Student') {
         student.role = 'Batch Administrator';
       }
-      saveStudentsList(students);
+      await saveStudentsList(students);
     }
 
     // Add to admins list
-    const admins = getAdminsList();
+    const admins = await getAdminsList();
     const existingAdmin = admins.find(a => 
       (a.email && a.email.toLowerCase() === request.email.toLowerCase()) ||
       (request.roll && a.roll === request.roll)
@@ -873,7 +1001,7 @@ app.post('/api/admin/approve-nomination', (req, res) => {
         password: student ? student.password : '@NAHID_KHAN_2024227170'
       };
       admins.push(newAdminEntry);
-      saveAdminsList(admins);
+      await saveAdminsList(admins);
 
       const { password: _p, ...safeNewAdmin } = newAdminEntry;
       return res.json({
@@ -897,7 +1025,7 @@ app.post('/api/admin/approve-nomination', (req, res) => {
 });
 
 // 8. Super Admin Rejects Admin Nomination
-app.post('/api/admin/reject-nomination', (req, res) => {
+app.post('/api/admin/reject-nomination', async (req, res) => {
   try {
     const { requestId, approverEmail, superAdminEmail, reason } = req.body;
     const cleanApprover = (approverEmail || superAdminEmail || '').trim().toLowerCase();
@@ -909,7 +1037,7 @@ app.post('/api/admin/reject-nomination', (req, res) => {
       });
     }
 
-    const requests = getAdminRequestsList();
+    const requests = await getAdminRequestsList();
     const request = requests.find(r => r.id === requestId);
     if (!request) {
       return res.status(404).json({ success: false, message: 'Nomination request not found.' });
@@ -919,7 +1047,7 @@ app.post('/api/admin/reject-nomination', (req, res) => {
     request.rejectedAt = new Date().toISOString();
     request.rejectedBy = SUPER_ADMIN_EMAIL;
     request.rejectionReason = (reason || 'Declined by Super Admin').trim();
-    saveAdminRequestsList(requests);
+    await saveAdminRequestsList(requests);
 
     res.json({
       success: true,
@@ -932,7 +1060,7 @@ app.post('/api/admin/reject-nomination', (req, res) => {
 });
 
 // 9. Update Student Role to Any Custom Role
-const handleStudentRoleUpdate = (req, res) => {
+const handleStudentRoleUpdate = async (req, res) => {
   try {
     const { id, studentId, roll, email, role, newRole } = req.body;
     const targetId = id || studentId;
@@ -942,7 +1070,7 @@ const handleStudentRoleUpdate = (req, res) => {
       return res.status(400).json({ success: false, message: 'Role designation cannot be empty.' });
     }
 
-    const students = getStudentsList();
+    const students = await getStudentsList();
     const student = students.find(s => 
       (targetId && s.id === targetId) || 
       (roll && s.roll === roll) ||
@@ -955,17 +1083,17 @@ const handleStudentRoleUpdate = (req, res) => {
 
     student.role = cleanRole;
     student.roleUpdatedAt = new Date().toISOString();
-    saveStudentsList(students);
+    await saveStudentsList(students);
 
     // If also in admins list (and not Super Admin), sync role title
-    const admins = getAdminsList();
+    const admins = await getAdminsList();
     const admin = admins.find(a => 
       (student.email && a.email && a.email.toLowerCase() === student.email.toLowerCase()) ||
       (student.roll && a.roll === student.roll)
     );
     if (admin && !admin.isSuperAdmin) {
       admin.role = cleanRole;
-      saveAdminsList(admins);
+      await saveAdminsList(admins);
     }
 
     res.json({
@@ -982,7 +1110,7 @@ app.put('/api/admin/student-role', handleStudentRoleUpdate);
 app.post('/api/admin/student-role', handleStudentRoleUpdate);
 
 // 10. Direct Account Password Sync (Backend Synchronization for dual accounts)
-app.post('/api/auth/update-account-password', (req, res) => {
+app.post('/api/auth/update-account-password', async (req, res) => {
   try {
     const clientIp = req.ip || req.connection?.remoteAddress || req.socket?.remoteAddress || '';
     const isLoopback = clientIp === '127.0.0.1' || clientIp === '::1' || clientIp === '::ffff:127.0.0.1' || clientIp.includes('127.0.0.1') || clientIp.includes('localhost');
@@ -1008,7 +1136,7 @@ app.post('/api/auth/update-account-password', (req, res) => {
     }
 
     let updatedStudents = 0;
-    const students = getStudentsList();
+    const students = await getStudentsList();
     students.forEach(s => {
       if ((cleanEmail && s.email && s.email.toLowerCase() === cleanEmail) || (cleanRoll && s.roll === cleanRoll)) {
         s.password = cleanPass;
@@ -1017,11 +1145,11 @@ app.post('/api/auth/update-account-password', (req, res) => {
       }
     });
     if (updatedStudents > 0) {
-      saveStudentsList(students);
+      await saveStudentsList(students);
     }
 
     let updatedAdmins = 0;
-    const admins = getAdminsList();
+    const admins = await getAdminsList();
     admins.forEach(a => {
       if ((cleanEmail && a.email && a.email.toLowerCase() === cleanEmail) || (cleanRoll && a.roll === cleanRoll)) {
         a.password = cleanPass;
@@ -1030,7 +1158,7 @@ app.post('/api/auth/update-account-password', (req, res) => {
       }
     });
     if (updatedAdmins > 0) {
-      saveAdminsList(admins);
+      await saveAdminsList(admins);
     }
 
     res.json({
@@ -1087,6 +1215,11 @@ app.use((req, res, next) => {
 
 // Start Server
 if (require.main === module) {
+  // Initialize Database Connection (MongoDB Atlas Cloud or JSON Fallback)
+  connectDB().catch(err => {
+    console.warn('[Database] Initial connection attempt error:', err.message);
+  });
+
   app.listen(PORT, () => {
     console.log(`[Server] Paradox-147 Portal backend active at http://localhost:${PORT}`);
     console.log(`[Server] Official Gmail SMTP sender configured: ${OFFICIAL_EMAIL}`);
