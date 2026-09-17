@@ -97,6 +97,9 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -107,7 +110,9 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  max-width: 100%;
   overflow-x: hidden;
+  position: relative;
 }
 
 main {
@@ -2623,146 +2628,298 @@ button, input, select, textarea, a {
    BREAKPOINT: MOBILE SMARTPHONES & TABLETS (<= 768px)
    ========================================================================== */
 @media (max-width: 768px) {
-  .section {
-    padding: 3.5rem 0;
-  }
-  .section-sm {
-    padding: 2rem 0;
-  }
-  .section-header {
-    margin-bottom: 2rem;
+  /* Prevent iOS Safari input auto-zoom */
+  input, select, textarea {
+    font-size: 16px !important;
   }
 
-  /* Grid Stack on Mobile */
+  /* Universal Touch Targets */
+  .btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+
+  .btn-sm, .btn-xs {
+    min-height: 38px;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .section {
+    padding: 3rem 0;
+  }
+  .section-sm {
+    padding: 1.75rem 0;
+  }
+  .section-header {
+    margin-bottom: 1.75rem;
+    padding: 0 0.5rem;
+  }
+
+  /* Grid Stacking on Mobile */
   .grid-cols-4,
   .grid-cols-3,
   .grid-cols-2 {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
+    grid-template-columns: 1fr !important;
+    gap: 1.15rem;
   }
 
   .student-grid {
     grid-template-columns: 1fr !important;
-    gap: 1.25rem;
+    gap: 1.15rem;
   }
 
   .contact-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    grid-template-columns: 1fr !important;
+    gap: 1.75rem;
   }
 
   .metrics-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     gap: 1rem;
   }
 
+  .form-row {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem;
+  }
+
   .gallery-grid {
-    columns: 1;
+    columns: 1 !important;
   }
 
   /* Hero Adjustments */
   .hero {
-    padding: 4.5rem 0 3.5rem 0;
+    padding: 4rem 0 3rem 0;
+  }
+  .hero-content {
+    max-width: 100%;
+  }
+  .hero-badge {
+    max-width: 100%;
+    font-size: 0.76rem;
+    padding: 0.35rem 0.8rem;
+    gap: 0.4rem;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.35;
+    margin-bottom: 1.15rem;
+    box-sizing: border-box;
+    display: inline-flex;
+    justify-content: center;
+  }
+  .hero-badge img {
+    flex-shrink: 0;
   }
   .hero-title {
-    font-size: clamp(2rem, 7.5vw, 2.75rem);
-    line-height: 1.2;
+    font-size: clamp(2rem, 8.5vw, 2.75rem);
+    line-height: 1.18;
+    margin-bottom: 1rem;
+  }
+  .hero-motto-ribbon {
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1.25rem;
+    gap: 0.5rem;
+  }
+  .hero-quote {
+    font-size: clamp(1rem, 3.8vw, 1.25rem);
+    text-align: center;
+    line-height: 1.35;
+  }
+  .hero-pillars {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: auto;
+    max-width: 100%;
+    gap: 0.35rem 0.6rem;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+    border-radius: var(--radius-md);
   }
   .hero-description {
-    font-size: 1.05rem;
+    font-size: 0.98rem;
+    line-height: 1.65;
     margin-bottom: 1.75rem;
   }
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
+    gap: 0.65rem;
     width: 100%;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2.25rem;
   }
   .hero-actions .btn {
     width: 100%;
+    min-height: 48px;
+    font-size: 0.96rem;
     justify-content: center;
   }
   .hero-stats-row {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.85rem;
-    padding-top: 1.75rem;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
   }
   .stat-box {
-    padding: 1rem 0.85rem;
+    padding: 0.85rem 0.75rem;
   }
   .stat-number {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
+  }
+  .stat-label {
+    font-size: 0.76rem;
+  }
+  .hero-campus-badge {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.35;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem auto 0 auto;
+    box-sizing: border-box;
   }
 
-  /* Directory Toolbar */
+  /* Official Header Banner */
+  .official-header-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.15rem 0.9rem;
+    gap: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  .official-banner-logos-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+  }
+  .official-banner-logo {
+    width: 48px;
+    height: 48px;
+  }
+  .official-banner-title {
+    font-size: 0.98rem;
+    line-height: 1.3;
+  }
+  .official-banner-batch {
+    font-size: 0.85rem;
+  }
+  .official-banner-tagline {
+    font-size: 0.75rem;
+  }
+
+  /* Directory Toolbar & Student Cards */
   .directory-toolbar {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
   .directory-toolbar .search-box {
     width: 100%;
   }
   .directory-toolbar .filter-group {
     width: 100%;
-    flex-wrap: wrap;
+    display: flex;
+    gap: 0.5rem;
   }
   .directory-toolbar select {
     flex: 1;
-    min-width: 130px;
-    height: 42px;
+    min-width: 0;
+    height: 44px;
+    font-size: 16px !important;
+  }
+  .student-card {
+    padding: 1.25rem 1rem;
+  }
+  .student-card .skills-list {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem;
+  }
+  .student-card .skill-pill {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.55rem;
+  }
+  .student-card .social-links {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .student-card .card-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .student-card .card-actions .btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+  .student-privacy-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 0.95rem;
+    gap: 0.85rem;
+  }
+  .student-privacy-banner .btn {
+    width: 100%;
+    min-height: 42px;
+    justify-content: center;
   }
 
   /* Notice Cards */
   .notice-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1.25rem;
+    gap: 0.85rem;
+    padding: 1.15rem 1rem;
   }
   .notice-date-box {
     width: auto;
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-sm);
+    gap: 0.4rem;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.78rem;
   }
-  /* Notice Actions */
   .notice-actions {
     width: 100%;
+    display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.45rem;
   }
   .notice-actions .btn {
-    flex: 1;
-    min-width: 120px;
+    flex: 1 1 120px;
+    min-height: 40px;
     justify-content: center;
   }
-
-  /* Notice Filter Bar on Mobile */
   .notice-filter-bar {
     flex-direction: column;
     align-items: stretch;
-    padding: 1rem;
-    gap: 0.85rem;
+    padding: 0.9rem;
+    gap: 0.75rem;
   }
 
   /* Gallery Tabs on Mobile */
   .gallery-tabs-nav {
+    display: flex !important;
     justify-content: flex-start !important;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     flex-wrap: nowrap !important;
-    padding-bottom: 0.65rem;
-    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.25rem;
     scrollbar-width: none;
+    gap: 0.4rem;
   }
   .gallery-tabs-nav::-webkit-scrollbar {
     display: none;
@@ -2770,47 +2927,101 @@ button, input, select, textarea, a {
   .gallery-tab-btn {
     flex-shrink: 0;
     white-space: nowrap;
-    padding: 0.45rem 0.95rem;
-    font-size: 0.82rem;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.8rem;
+    min-height: 40px;
   }
 
-  /* Student Card Actions */
-  .student-card .card-actions {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .student-card .card-actions .btn {
+  /* Table Responsiveness Across Dashboard */
+  .table-responsive {
     width: 100%;
-    justify-content: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    margin-bottom: 1.15rem;
+    display: block;
+  }
+  .data-table {
+    min-width: 580px;
+    width: 100%;
+  }
+  .data-table th, .data-table td {
+    padding: 0.85rem 0.95rem;
+    font-size: 0.84rem;
+  }
+  .single-row-table {
+    min-width: 640px;
+    width: 100%;
+  }
+
+  /* Routine Timetable Grid */
+  .routine-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  .routine-day-card {
+    padding: 1.1rem 0.95rem;
+  }
+  .routine-period-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  /* Office Customizer on Mobile */
+  .office-tabs-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.25rem;
+    padding-bottom: 0.4rem;
+  }
+  .office-tab-btn {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.78rem;
+    min-height: 38px;
+  }
+  .office-control-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem;
+  }
+  .office-cols-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.4rem;
   }
 
   /* Responsive Modals */
   .modal-backdrop {
-    padding: 0.75rem;
+    padding: 0.5rem;
     align-items: center;
   }
   .modal-content,
   .modal-dialog,
   .modal-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    max-height: 88vh !important;
+    width: 95vw !important;
+    max-width: 95vw !important;
+    max-height: 90vh !important;
     margin: 0 auto !important;
-    padding: 1.35rem 1.15rem !important;
+    padding: 1.25rem 0.95rem !important;
     border-radius: var(--radius-md) !important;
     overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
   }
   .modal-actions {
     flex-direction: column-reverse;
     gap: 0.5rem;
+    width: 100%;
   }
   .modal-actions .btn {
     width: 100%;
+    min-height: 44px;
     justify-content: center;
   }
   .profile-modal-grid {
     grid-template-columns: 1fr !important;
-    gap: 1.25rem;
+    gap: 1.15rem;
   }
 
   .lightbox-prev { left: 10px; }
@@ -2822,64 +3033,106 @@ button, input, select, textarea, a {
    ========================================================================== */
 @media (max-width: 480px) {
   .container {
-    padding-left: 0.9rem;
-    padding-right: 0.9rem;
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
   }
 
   /* Compact Navbar Brand */
   .brand-crest-img {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
   }
   .brand-name {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
   .brand-sub {
-    font-size: 0.62rem;
-    letter-spacing: 0.03em;
-    max-width: 155px;
+    font-size: 0.6rem;
+    letter-spacing: 0.02em;
+    max-width: 130px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .nav-actions .btn-outline-gold {
+    display: none !important;
   }
   .nav-actions .btn {
     padding: 0.35rem 0.65rem;
     font-size: 0.78rem;
   }
 
+  /* Hero Section Small Phones */
+  .hero-title {
+    font-size: clamp(1.85rem, 8.5vw, 2.25rem);
+  }
+  .hero-quote {
+    font-size: 0.98rem;
+  }
+  .hero-pillars {
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.75rem;
+    gap: 0.25rem;
+  }
+  .hero-campus-badge {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.6rem;
+  }
   .hero-stats-row {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
+  .stat-box {
+    padding: 0.75rem;
+  }
+  .stat-number {
+    font-size: 1.45rem;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.75rem;
+  }
+
+  /* Dashboard Adjustments */
+  .dash-metric-card {
+    padding: 1rem 0.85rem;
+  }
+  .metric-value {
+    font-size: 1.45rem;
+  }
+  .office-cols-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .office-tab-btn {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.74rem;
   }
 
   /* Auth Card */
   .auth-card {
-    margin: 1rem auto;
-    padding: 1.5rem 1rem;
+    margin: 0.75rem auto;
+    padding: 1.25rem 0.85rem;
     border-radius: var(--radius-md);
   }
   .auth-crest-img {
-    width: 58px;
-    height: 58px;
-    margin-bottom: 0.85rem;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0.75rem;
   }
   .auth-header h2 {
-    font-size: 1.45rem;
+    font-size: 1.35rem;
   }
   .auth-tabs {
-    gap: 0.25rem;
+    gap: 0.2rem;
   }
   .auth-tab {
-    padding: 0.5rem 0.4rem;
-    font-size: 0.82rem;
+    padding: 0.45rem 0.35rem;
+    font-size: 0.78rem;
   }
   .demo-pill-group {
     flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 }
 
